@@ -1,0 +1,27 @@
+<div class="top-navbar">
+    <button class="ham-btn">
+        <fa-icon [icon]="faBars"></fa-icon>
+    </button>
+    <div class="logo">
+        <img src="https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_10_2x.png" alt="logo"
+            class="img-logo">
+        <span class="logo-title">Calendar</span>
+    </div>
+    <button class="today-btn" (click)="showToday()">Today</button>
+    <button class="top-nav-month-btn prev-month-btn-topnav" (click)="changeDate('prev')">
+        <fa-icon [icon]="faAngleLeft"></fa-icon>
+    </button>
+    <button class="top-nav-month-btn next-month-btn-topnav" (click)="changeDate('next')">
+        <fa-icon [icon]="faAngleRight"></fa-icon>
+    </button>
+    <div class="calendar-top-title">
+        {{ this.monthNames[this.shownDate.getMonth()] }} {{ this.shownDate.getFullYear() }}
+    </div>
+    <div class="top-nav-additional-btns">
+        <menu-button 
+            [items]="menuItems" 
+            [selectedView]="selectedView"
+            (selectedViewChange)="selectView($event)">
+        </menu-button>
+    </div>
+</div>

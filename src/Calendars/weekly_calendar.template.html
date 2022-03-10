@@ -1,0 +1,33 @@
+<div class="weekly-calendar-container">
+    <table class="weekly-calendar">
+        <thead>
+            <tr>
+                <td></td>
+                <td class="monthly-calendar-weekday" *ngFor="let day of weekDays">{{ day }}</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="weekly-calendar-time-cell"></td>
+                <td class="weekly-calendar-cell" *ngFor="let date of week">
+                    {{ date }}
+                </td>
+            </tr>
+            <tr *ngFor="let hr of hours; let i = index">
+                <td class="weekly-calendar-time-cell">{{ hr }} {{ i < 11 ? 'AM' : 'PM' }}</td>
+                <td class="weekly-calendar-cell" *ngFor="let date of week">
+                    <div *ngFor="let event of events">
+                        <span class="weekly-event" *ngIf="(event?.startTime == i + 2) && 
+                                    event.date.getDate() == date && 
+                                    event.date.getFullYear() == shownDate.getFullYear() &&
+                                    (event.date.getMonth() == shownDate.getMonth() || 
+                                    event.date.getMonth() == shownDate.getMonth() + 1)"
+                            [style.height.px]="event.interval * 50">
+                            {{ event.name }} {{ event.starts }} - {{ event.ends }}
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

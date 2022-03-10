@@ -1,0 +1,21 @@
+<div class="left-navbar">
+    <calendar [shownDate]="leftCalendarDate" (dateSelected)="selectDate($event)"></calendar>
+    <div class="person-calendars">
+        <div class="person-calendars-toggle" (click)="toggleMyCalendars()">My calendars &nbsp; &nbsp; &nbsp;
+            <fa-icon 
+                [ngStyle]="{ 'float':'right', 'margin-right': '20px' }"
+                [icon]="myCalendarsCollapsed ? faAngleDown : faAngleUp">
+            </fa-icon>
+        </div>
+        <div *ngIf="!myCalendarsCollapsed">
+            <div *ngFor="let calendar of personCalendars">
+                <input type="checkbox" 
+                    [name]="calendar" 
+                    [id]="calendar" 
+                    [checked]="selectedCalendars.has(calendar)"
+                    (change)="selectCalendars(calendar)">
+                {{ calendar }}
+            </div>
+        </div>
+    </div>
+</div>

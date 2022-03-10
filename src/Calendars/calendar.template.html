@@ -1,0 +1,33 @@
+<div class="calendar">
+  <div class="calendar-body">
+    <div class="calendar-nav">
+      <span class="calendar-date-title">{{ monthNames[shownMonth] }} {{ shownYear }}</span>
+      <button class="left-nav-month-btn prev-month-btn-leftnav" (click)="getPrevMonth()">
+        <fa-icon [icon]="faAngleLeft"></fa-icon>
+      </button>
+      <button class="left-nav-month-btn next-month-btn-leftnav" (click)="getNextMonth()">
+        <fa-icon [icon]="faAngleRight"></fa-icon>
+      </button>
+    </div>
+    <div class="calendar-days">
+      <thead>
+        <tr>
+          <td *ngFor="let day of daysInWeek"> {{ day }} </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let week of monthArr">
+          <td *ngFor="let date of week" 
+            (click)="selectDate(date)" 
+            [classList]="(shownMonth == selectedDate?.getMonth() && 
+                      shownYear == selectedDate?.getFullYear() && 
+                      date == selectedDate?.getDate()) 
+                      ? 'selected-date' : 'calendar-date'"
+            [classList]="(currDay == date && currMonth == shownMonth && currYear == shownYear) ? 'curr-date': 'calendar-date'">
+            {{ date }}
+          </td>
+        </tr>
+      </tbody>
+    </div>
+  </div>
+</div>
