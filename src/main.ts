@@ -11,10 +11,11 @@ import { Routes, RouterModule, Router } from "@angular/router";
 import { MenuButtonComponent } from "./Navigation/menuButton.component";
 import { CalendarEventsService } from "./Services/calendarEventsService.class";
 import { WeeklyCalendarComponent } from "./Calendars/weeklyCalendar.component";
+import { DailyCalendarComponent } from "./Calendars/dailyCalendar.component";
 
 const routes: Routes = [
   { path: "", component: MonthlyCalendarComponent },
-  { path: "day", redirectTo: '' },
+  { path: "day", component: DailyCalendarComponent },
   { path: "week", component: WeeklyCalendarComponent },
   { path: "month", component: MonthlyCalendarComponent },
   { path: "year", redirectTo: '' },
@@ -72,7 +73,8 @@ class AppComponent {
     MonthlyCalendarComponent,
     ContentContainerComponent,
     MenuButtonComponent,
-    WeeklyCalendarComponent
+    WeeklyCalendarComponent,
+    DailyCalendarComponent
   ],
   bootstrap: [AppComponent],
   providers: [

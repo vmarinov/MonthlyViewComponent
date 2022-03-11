@@ -1,0 +1,18 @@
+<div id="daily-calendar-layout">
+    <div class="daily-calendar-header">
+        <div class="daily-calendar-weekday">
+            {{ dayOfWeek }}
+        </div>
+        <div class="daily-calendar-date">
+            {{ selectedDate }}
+        </div>
+    </div>
+    <div class="hour" *ngFor="let hourlyEvent of hourlyEvents | keyvalue">
+       <div>
+            {{ hourlyEvent.value.hour }}
+       </div> 
+       <div class="events">
+           {{ hourlyEvent.value.events }}
+       </div>
+    </div>
+</div>
