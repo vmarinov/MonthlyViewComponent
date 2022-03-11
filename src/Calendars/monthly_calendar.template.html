@@ -1,22 +1,24 @@
-<table class="monthly-calendar">
-    <thead>
-        <tr>
-            <td class="monthly-calendar-weekday" *ngFor="let day of weekDays">{{ day }}</td>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let week of monthArr">
-            <td *ngFor="let date of week" class="monthly-calendar-date">
-                {{ date }}
-                <div *ngFor="let event of events">
-                    <div *ngIf="event.date.getMonth() == shownMonth 
-                                && event.date.getFullYear() == shownYear
-                                && event.date.getDate() == date">
-                        {{ event.starts }} {{ event.name }}
-                    </div>
+<div id="monthly-calendar-layout">
+    <div id="monthly-calendar-header">
+        <div class="week-day" *ngFor="let date of weekDays">
+            {{ date }}
+            <div *ngFor="let event of events">
+                <div *ngIf="event.date.getMonth() == shownMonth 
+                            && event.date.getFullYear() == shownYear
+                            && event.date.getDate() == date">
+                    {{ event.starts }} {{ event.name }}
                 </div>
-            </td>
-        </tr>
-    </tbody>
-
-</table>
+            </div>
+        </div>
+    </div>
+    <div *ngFor="let date of monthArr" class="calendar-date">
+        {{ date }}
+        <div *ngFor="let event of events">
+            <div *ngIf="event.date.getMonth() == shownMonth 
+                        && event.date.getFullYear() == shownYear
+                        && event.date.getDate() == date">
+                {{ event.starts }} {{ event.name }}
+            </div>
+        </div>
+    </div>
+</div>

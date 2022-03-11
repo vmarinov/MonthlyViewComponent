@@ -7,7 +7,8 @@ const WEEK_DAYS: string[] = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 @Component({
     selector: 'monthly-calendar',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: 'monthly_calendar.template.html'
+    templateUrl: 'monthly_calendar.template.html',
+    styleUrls: ['monthlyCalendar.css']
 })
 export class MonthlyCalendarComponent implements OnInit, OnDestroy {
     events!: any;
@@ -29,8 +30,8 @@ export class MonthlyCalendarComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.eventsSubscription = this.calendarEventsService.eventsShown$.subscribe(
             (events: any) => {
+                this.changeRef.markForCheck();
                 this.events = events;
-                this.changeRef.detectChanges();
             }
         );
 
@@ -57,26 +58,12 @@ export class MonthlyCalendarComponent implements OnInit, OnDestroy {
     }
 
     setMonthDays() {
-        this.monthArr = [];
-        let week: any[] = Array(7);
-        week.fill('');
+        this.monthArr = Array(this.lastDayOfMonth).fill(' ');
         let startDay = this.shownDate.getDay();
+        
         for (let i = 1; i <= this.lastDayOfMonth; i++) {
-            if (startDay % 7 == 0 && startDay != 1) {
-                if (week[0] != '' || week[week.length - 1] != '') {
-                    this.monthArr.push(week);
-                }
-                week = [];
-            }
-            if (startDay == 7) {
-                startDay = 0
-            }
-            week[startDay] = i;
+            this.monthArr[startDay] = i;
             startDay++;
-        }
-
-        if (week.length > 0) {
-            this.monthArr.push(week);
         }
     }
 

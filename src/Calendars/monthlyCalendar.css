@@ -1,0 +1,33 @@
+#monthly-calendar-layout {
+    display: grid;
+    background-color: white;
+    grid-template-rows: fill-auto minmax(105px, 200px);
+    grid-template-columns: repeat(7, 1fr);
+    column-gap: 0px;
+    justify-content: start;
+    align-content: stretch;
+    row-gap: 0px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#monthly-calendar-header {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+    grid-area: 1 / 1 / 1 / -1;
+}
+
+.week-day {
+    text-align: center;
+}
+
+.calendar-date {
+    height: 105px;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    border: solid 1px rgb(211, 211, 211, .4);
+    margin-top: 0px;
+}
