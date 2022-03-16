@@ -12,6 +12,7 @@ import { MenuButtonComponent } from "./Navigation/menuButton.component";
 import { CalendarEventsService } from "./Services/calendarEventsService.class";
 import { WeeklyCalendarComponent } from "./Calendars/weeklyCalendar.component";
 import { DailyCalendarComponent } from "./Calendars/dailyCalendar.component";
+import { CommonModule } from "@angular/common";
 
 const routes: Routes = [
   { path: "", component: MonthlyCalendarComponent },
@@ -61,6 +62,7 @@ class AppComponent {
 
 @NgModule({
   imports: [
+    CommonModule,
     BrowserModule,
     FontAwesomeModule,
     RouterModule.forRoot(routes, { useHash: true })

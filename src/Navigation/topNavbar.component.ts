@@ -14,7 +14,6 @@ export class TopNavbarComponent implements OnInit, OnDestroy {
     @Output() selectedViewChange: EventEmitter<any> = new EventEmitter<any>();
 
     selectedView: any;
-    selectedViewComponent: any;
     shownDate: any;
     shownEvents: any;
     menuItems = [
@@ -68,22 +67,34 @@ export class TopNavbarComponent implements OnInit, OnDestroy {
     }
 
     changeDate(direction: any) {
-        let fnNext = this.getNavFunction(this.selectedViewComponent, 'next');
-        let fnPrev = this.getNavFunction(this.selectedViewComponent, 'prev');
+        let fnNext = this.getNavFunction('next');
+        let fnPrev = this.getNavFunction('prev');
 
         direction == 'next' ? fnNext() : fnPrev();
     }
 
-    getNavFunction(component: any, direction: string) {
-        if (this.currRoute.url == '/month' || this.currRoute.url == '/') {
-            return direction == 'next' ? this.getNextMonth.bind(this) : this.getPrevMonth.bind(this);
+    getNavFunction(direction: string) {
+        switch(this.currRoute.url) {
+            case '/':
+            case '/month':
+                return direction == 'next' ? this.getNextMonth.bind(this) : this.getPrevMonth.bind(this);
+            case '/week':
+                return direction == 'next' ? this.getNextWeek.bind(this) : this.getPrevWeek.bind(this);
+            case '/day':
+                return direction == 'next' ? this.getNextDay.bind(this) : this.getPrevDay.bind(this);
+            default:
+                return direction == 'next' ? this.getNextMonth.bind(this) : this.getPrevMonth.bind(this);
         }
+    }
 
-        if (this.currRoute.url == '/week') {
-            return direction == 'next' ? this.getNextWeek.bind(this) : this.getPrevWeek.bind(this);
-        }
+    getNextDay() {
+        let date = new Date(this.shownDate.setDate(this.shownDate.getDate() + 1));
+        this.calendarEventsService.setDate(date);
+    }
 
-        return direction == 'next' ? this.getNextMonth.bind(this) : this.getPrevMonth.bind(this);
+    getPrevDay() {
+        let date = new Date(this.shownDate.setDate(this.shownDate.getDate() - 1));
+        this.calendarEventsService.setDate(date);
     }
 
     getNextWeek() {
