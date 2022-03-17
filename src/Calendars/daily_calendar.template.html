@@ -1,22 +1,22 @@
-<div id="daily-calendar-layout">
-    <div class="daily-calendar-header">
-        <div class="daily-calendar-weekday"
-            [ngClass]="{'current-weekday': currentDate.getDate() == shownDate.getDate() && 
+<div class="daily-calendar-header">
+    <div class="daily-calendar-weekday"
+        [ngClass]="{'current-weekday': currentDate.getDate() == shownDate.getDate() && 
+        currentDate.getMonth() == shownDate.getMonth() && 
+        currentDate.getFullYear() == shownDate.getFullYear()}">
+        {{ dayOfWeek }}
+    </div>
+    <div class="daily-calendar-date" 
+        [ngClass]="{'current': currentDate.getDate() == shownDate.getDate() && 
             currentDate.getMonth() == shownDate.getMonth() && 
             currentDate.getFullYear() == shownDate.getFullYear()}">
-            {{ dayOfWeek }}
-        </div>
-        <div class="daily-calendar-date" 
-            [ngClass]="{'current': currentDate.getDate() == shownDate.getDate() && 
-                currentDate.getMonth() == shownDate.getMonth() && 
-                currentDate.getFullYear() == shownDate.getFullYear()}">
-            {{ selectedDate }}
-        </div>
+        {{ selectedDate }}
     </div>
+</div>
+<div id="daily-calendar-layout">
     <div *ngFor="let hr of hours; let i = index" class="time">
         <span class="hour">{{ hr }} {{ i < 11 ? 'AM' : 'PM' }}</span>
         <span  *ngFor="let event of events; let j = index">
-            <span class="hourly-event" *ngIf="(event?.startTime == i + 2) && 
+            <span class="hourly-event" *ngIf="(event?.startTime == i + 1) && 
                     shownDate.getDate() == event.date.getDate() &&
                     (shownDate.getMonth() == event.date.getMonth() || 
                     shownDate.getMonth() == event.date.getMonth() - 1)"

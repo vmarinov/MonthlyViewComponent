@@ -3,18 +3,31 @@
     overflow-y: auto;
     overflow-x: hidden;
     width: 100%;
-    height: 600px;
+    height: 560px;
     grid-template-rows: auto-fill 48px;
     grid-template-columns: 1fr;
+    scrollbar-width: 1px;
 }
 
 .daily-calendar-header {
+    top: 0;
+    left: 0;
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
     border-bottom: 1px solid rgb(211, 211, 211, .4);
     border-left: 1px solid rgb(211, 211, 211, .4);
+    margin-bottom: 10px;
+    z-index: 999;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #70757a;
 }
 
 .daily-calendar-weekday {
