@@ -102,6 +102,4 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
             hour.events = [];
         }
     }
-
-    //add fn to calculate width of events element
 }
