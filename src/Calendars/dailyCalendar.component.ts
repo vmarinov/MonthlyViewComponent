@@ -62,6 +62,9 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
 
     setEvents(events: any) {
         this.events = events;
+        if (!this.events) {
+            return;
+        }
         this.events = this.events.filter((event: any) => {
             return event.date.getDate() == this.shownDate.getDate() &&
                 (event.date.getMonth() == this.shownDate.getMonth() ||
@@ -96,7 +99,6 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
         for (let hour of this.hoursAndEvents.values()) {
             hour.events = [];
         }
-        this.changeRef.detectChanges();
     }
 
     //add fn to calculate width of events element
