@@ -17,7 +17,7 @@
             <div *ngIf="event.date.getMonth() == shownMonth 
                         && event.date.getFullYear() == shownYear
                         && event.date.getDate() == date">
-                {{ event.starts }} {{ event.name }}
+                {{ event.starts }} {{ event.starts > 11 ? 'pm' : 'am' }} {{ event.name }}
             </div>
         </div>
     </div>
