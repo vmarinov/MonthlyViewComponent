@@ -22,7 +22,7 @@
                     shownDate.getMonth() == event.date.getMonth() - 1)"
                 [style.height.px]="event.interval * 48"
                 [style.margin-left.px]="j * 20">      
-                {{ event.name }}       
+                {{ event.name }} {{ event.starts + ' - ' + event.ends }}      
             </span>
         </span>
     </div>

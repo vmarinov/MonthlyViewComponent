@@ -62,4 +62,6 @@ export class DailyCalendarComponent implements OnDestroy {
             });
         }
     }
+
+    //add fn to calculate width of events element
 }

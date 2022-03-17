@@ -22,14 +22,6 @@
     z-index: 999;
 }
 
-::-webkit-scrollbar {
-    width: 5px;
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: #70757a;
-}
-
 .daily-calendar-weekday {
     color: black;
     line-height: 32px;
