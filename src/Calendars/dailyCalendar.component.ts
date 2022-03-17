@@ -78,11 +78,13 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
             let duration = `${startTime % 12 == 0 ? '12' : startTime % 12}${startTime <= 11 && endTime > 11 ? 'am' : ''} - 
                 ${endTime % 12 == 0 ? '12' : endTime % 12}${endTime < 11 ? 'am' : 'pm'}`;
             let interval = endTime - startTime;
+            let elemHeight = interval > 0 ? interval * 48 : 48;
             Object.assign(element,
                 {
                     interval,
                     startTime,
-                    duration
+                    duration,
+                    elemHeight
                 })
         });
 
