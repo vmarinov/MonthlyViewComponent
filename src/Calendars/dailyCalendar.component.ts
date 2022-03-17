@@ -75,7 +75,8 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
         this.events.forEach((element: any) => {
             let startTime = element.starts.substring(0, 2);
             let endTime = element.ends.substring(0, 2);
-            let duration = `${startTime}${startTime <= 11 && endTime > 11 ? 'am' : ''} - ${endTime}${endTime < 11 ? 'am' : 'pm'}`;
+            let duration = `${startTime % 12 == 0 ? '12' : startTime % 12}${startTime <= 11 && endTime > 11 ? 'am' : ''} - 
+                ${endTime % 12 == 0 ? '12' : endTime % 12}${endTime < 11 ? 'am' : 'pm'}`;
             let interval = endTime - startTime;
             Object.assign(element,
                 {
