@@ -39,7 +39,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         for (let hr of this.hours) {
             let hour = hr % 12 == 0 ? '12' : `${hr % 12}`;
-            hour += hr < 11 ? ' AM' : ' PM'
+            hour += hr <= 11 ? ' AM' : ' PM'
             this.hoursAndEvents.set(hr, { hour, events: [] });
         }
     }
@@ -75,7 +75,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
         this.events.forEach((element: any) => {
             let startTime = element.starts.substring(0, 2);
             let endTime = element.ends.substring(0, 2);
-            let duration = `${startTime}${startTime < 11 && endTime > 11 ? 'am' : ''} - ${endTime}${endTime < 11 ? 'am' : 'pm'}`;
+            let duration = `${startTime}${startTime <= 11 && endTime > 11 ? 'am' : ''} - ${endTime}${endTime < 11 ? 'am' : 'pm'}`;
             let interval = endTime - startTime;
             Object.assign(element,
                 {

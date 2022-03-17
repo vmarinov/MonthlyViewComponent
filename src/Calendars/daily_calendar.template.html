@@ -19,7 +19,8 @@
         </span>
         <span *ngIf="hourEvent.value.events.length > 0" class="event-layout">
             <span *ngFor="let event of hourEvent.value.events" class="hourly-event"
-                [style.height.px]="event.interval > 0 ? event.interval * 48 : 48">
+                [style.height.px]="event.interval > 0 ? event.interval * 48 : 48"
+                [style.z-index]="event.startTime">
                 {{ event.name }} {{ event.duration }}      
             </span>
         </span>

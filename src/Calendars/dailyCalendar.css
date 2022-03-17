@@ -83,9 +83,10 @@
     background-color: #1a73e8;
     color: white;
     font-size: 12px;
+    font-weight: 600;
+    font-family: Helvetica, Arial, sans-serif;
     border-radius: 5px;
     border: 1px solid white;
-    z-index: 999;
     margin-left: -28px;
     text-indent: 10px;
 }

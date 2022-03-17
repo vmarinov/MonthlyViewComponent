@@ -29,6 +29,12 @@ export class CalendarEventsService {
     },
     {
       name: 'Meet', starts: '11:00', ends: '13:00', calendar: 'emilia', date: new Date(2022, 3, 2),
+    },
+    {
+      name: 'Coffee', starts: '10:00', ends: '11:00', calendar: 'emilia', date: new Date(2022, 3, 2),
+    },
+    {
+      name: 'Beer', starts: '12:00', ends: '14:00', calendar: 'emilia', date: new Date(2022, 3, 2),
     }];
 
   eventsSource = new BehaviorSubject<any>(null);
