@@ -90,14 +90,17 @@
     font-family: Helvetica, Arial, sans-serif;
     border-radius: 5px;
     border: 1px solid white;
-    margin-left: -28px;
     text-indent: 10px;
+    margin-top: 48px;
+    margin-left: -18px;
 }
 
 .event-layout {
     display: flex;
+    position: relative;
     flex-flow: row nowrap;
-    width: 100%;
-    z-index: 999;
+    margin-left: -28px;
     margin-top: 48px;
+    width: 100%;
+    z-index: 1;
 }

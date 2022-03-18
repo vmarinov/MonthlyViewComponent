@@ -17,12 +17,11 @@
         <span class="hour">
            {{ hourEvent.value.hour }}
         </span>
-        <span *ngIf="hourEvent.value.events.length > 0" class="event-layout">
-            <span *ngFor="let event of hourEvent.value.events" class="hourly-event"
-                [style.height.px]="event.elemHeight"
-                [style.z-index]="event.startTime">
-                {{ event.name }} {{ event.duration }}      
-            </span>
+        <span *ngFor="let event of hourEvent.value.events; let i = index" class="hourly-event"
+            [style.height.px]="event.elemHeight"
+            [style.z-index]="i + 1"
+            [style.margin-left.px]="event.marginLeft">
+            {{ event.name }} {{ event.duration }}      
         </span>
     </div>
 </div>

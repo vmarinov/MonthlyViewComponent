@@ -35,6 +35,15 @@ export class CalendarEventsService {
     },
     {
       name: 'Beer', starts: '12:00', ends: '14:00', calendar: 'emilia', date: new Date(2022, 3, 2),
+    },
+    {
+      name: 'Fish n Chips', starts: '12:00', ends: '14:00', calendar: 'emilia', date: new Date(2022, 3, 2),
+    },
+    {
+      name: 'Nap', starts: '13:00', ends: '14:00', calendar: 'emilia', date: new Date(2022, 3, 2),
+    },
+    {
+      name: 'Sleep Walk', starts: '13:00', ends: '15:00', calendar: 'emilia', date: new Date(2022, 3, 2),
     }];
 
   eventsSource = new BehaviorSubject<any>(null);
