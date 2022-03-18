@@ -84,7 +84,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
                     interval,
                     startTime,
                     duration,
-                    elemHeight
+                    elemHeight,
                 })
         });
 
@@ -93,6 +93,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
                 let hourlyEventObj = this.hoursAndEvents.get(Number(event.startTime));
                 hourlyEventObj.events.push(event);
             }
+            this.setEventsPositions();
         }
         this.changeRef.detectChanges();
     }
@@ -100,6 +101,23 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     clearEvents() {
         for (let hour of this.hoursAndEvents.values()) {
             hour.events = [];
+        }
+    }
+
+    // event positioning fn
+    // when events have same start hour the shorter event should always have higher z-index and they are shown in longest -> shortest order
+    // events that start 1 hour later should have margin left in order for the previous event to show
+    setEventsPositions() {
+        for (let obj of this.hoursAndEvents.values()) {
+            obj.events.sort((a: any, b: any) => b.interval - a.interval); //sort events by duration longer -> shortest
+            let prevHourlyEventObj;
+            if (obj.events[0]?.startTime > 2) {
+                prevHourlyEventObj = this.hoursAndEvents.get(Number(obj.events[0].startTime - 1));
+            }
+            if (prevHourlyEventObj?.events.length > 0) {
+                let margin = prevHourlyEventObj.events[0].marginLeft;
+                obj.events[0].marginLeft = margin ? margin * 2 + 10 : 10;
+            }
         }
     }
 }
