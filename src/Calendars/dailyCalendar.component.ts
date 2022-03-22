@@ -20,6 +20,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     hours = HRS;
     hoursAndEvents: Map<any, any> = new Map<any, any>();
     events: any;
+    draggedEvent: any;
 
     constructor(@Inject('CalendarEventsService') private calendarEventsService: CalendarEventsService,
         @Inject('weekDays') private weekDays: any, private changeRef: ChangeDetectorRef) {
@@ -72,20 +73,8 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
                 event.date.getFullYear() == this.shownDate.getFullYear()
         });
 
-        this.events.forEach((element: any) => {
-            let startTime = element.starts.substring(0, 2);
-            let endTime = element.ends.substring(0, 2);
-            let duration = `${startTime % 12 == 0 ? '12' : startTime % 12}${startTime <= 11 && endTime > 11 ? 'am' : ''} - 
-                ${endTime % 12 == 0 ? '12' : endTime % 12}${endTime < 11 ? 'am' : 'pm'}`;
-            let interval = endTime - startTime;
-            let elemHeight = interval > 0 ? interval * 48 : 48;
-            Object.assign(element,
-                {
-                    interval,
-                    startTime,
-                    duration,
-                    elemHeight,
-                })
+        this.events.forEach((event: any) => {
+            this.setEventProperties(event);
         });
 
         if (this.events.length > 0) {
@@ -107,6 +96,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     // event positioning fn
     // when events have same start hour the shorter event should always have higher z-index and they are shown in longest -> shortest order
     // events that start 1 hour later should have margin left in order for the previous event to show
+    // try to put events in groups depending on duration overlaps and then determine z-index and margins
     setEventsPositions() {
         for (let obj of this.hoursAndEvents.values()) {
             obj.events.sort((a: any, b: any) => b.interval - a.interval); //sort events by duration longer -> shortest
@@ -119,5 +109,59 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
                 obj.events[0].marginLeft = margin ? margin * 2 + 10 : 10;
             }
         }
+    }
+
+    dragStart(event: any, calendarEvent: any, eventPos: any) {
+        this.draggedEvent = calendarEvent;
+        this.draggedEvent.pos = eventPos;
+        event.dataTransfer.setData("text/plain", event.target.id);
+        event.target.style.cursor = 'move';
+        event.target.style.opacity = 1;
+    }
+
+    onDragOver(event: any) {
+        event.preventDefault()
+    }
+
+    onDrop(event: any) {
+        let eventsObj = this.hoursAndEvents.get(Number(this.draggedEvent.startTime));
+        if (eventsObj) {
+            eventsObj.events.splice(this.draggedEvent.pos, 1);
+        }
+
+        let newStartHour = event.target.attributes?.hour?.value;
+        this.draggedEvent.starts = newStartHour;
+        this.draggedEvent.ends = `${Number(newStartHour) + this.draggedEvent.interval}`;
+        this.setEventProperties(this.draggedEvent);
+        let hourEvent = this.hoursAndEvents.get(Number(newStartHour));
+        hourEvent.events.push(this.draggedEvent);
+        event.dataTransfer.clearData();
+
+        let id = event.dataTransfer.getData("text/plain");
+        // let target = event.target;
+        // while (target?.class != 'time') {
+        //     target = target.parentElement;
+        // }
+        event.target.appendChild(document.getElementById(id));
+
+        this.setEventsPositions();
+    }
+
+    setEventProperties(event: any) {
+        let startTime = event.starts.substring(0, 2);
+        let endTime = event.ends.substring(0, 2);
+        let duration = `${startTime % 12 == 0 ? '12' : startTime % 12}${startTime <= 11 && endTime > 11 ? 'am' : ''} - 
+                ${endTime % 12 == 0 ? '12' : endTime % 12}${endTime < 11 ? 'am' : 'pm'}`;
+        let interval = endTime - startTime;
+        let elemHeight = interval > 0 ? interval * 48 : 48;
+
+        Object.assign(event,
+        {
+            interval,
+            startTime,
+            endTime,
+            duration,
+            elemHeight,
+        })
     }
 }

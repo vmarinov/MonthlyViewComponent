@@ -46,7 +46,16 @@ export class CalendarEventsService {
       name: 'Sleep Walk', starts: '13:00', ends: '15:00', calendar: 'emilia', date: new Date(2022, 3, 2),
     },
     {
-      name: 'Walk the dog', starts: '18:00', ends: '19:00', calendar: 'emilia', date: new Date(2022, 3, 2),
+      name: 'Walk the dog', starts: '08:00', ends: '09:00', calendar: 'emilia', date: new Date(2022, 3, 2),
+    },
+    {
+      name: 'Long', starts: '17:00', ends: '23:00', calendar: 'emilia', date: new Date(2022, 3, 2),
+    },
+    {
+      name: 'Shorter', starts: '19:00', ends: '21:00', calendar: 'emilia', date: new Date(2022, 3, 2),
+    },
+    {
+      name: 'Shortest', starts: '19:00', ends: '20:00', calendar: 'emilia', date: new Date(2022, 3, 2),
     }];
 
   eventsSource = new BehaviorSubject<any>(null);
