@@ -3,6 +3,7 @@ import { Subscription } from "rxjs";
 import { CalendarEventsService } from "src/Services/calendarEventsService.class";
 
 const HRS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
+const EVENT_MAX_WIDTH = 1100;
 
 @Component({
     selector: 'daily-calendar',
@@ -96,6 +97,24 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
         this.groupedEvents = [];
     }
 
+    setEventProperties(event: any) {
+        let startTime = Number(event.starts.substring(0, 2));
+        let endTime = Number(event.ends.substring(0, 2));
+        let duration = `${startTime % 12 == 0 ? '12' : startTime % 12}${startTime <= 11 && endTime > 11 ? 'am' : ''} - 
+                ${endTime % 12 == 0 ? '12' : endTime % 12}${endTime < 11 ? 'am' : 'pm'}`;
+        let interval = endTime - startTime;
+        let elemHeight = interval > 0 ? interval * 48 : 48;
+
+        Object.assign(event,
+            {
+                interval,
+                startTime,
+                endTime,
+                duration,
+                elemHeight,
+            })
+    }
+
     // event positioning fn
     // when events have same start hour the shorter event should always have higher z-index and they are shown in longest -> shortest order
     // events that start 1 hour later should have margin left in order for the previous event to show
@@ -105,12 +124,12 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
             for (let i = 0; i < group.events.length; i++) {
                 let event = group.events[i];
                 event.zIndex = i + 1;
-                event.width = 1200;
+                event.width = EVENT_MAX_WIDTH;
                 if (i > 0) {
                     let prevEvent = group.events[i - 1];
-                    if (prevEvent.startTime == event.startTime) {
+                    if (prevEvent.startTime == event.startTime || prevEvent.endTime > event.startTime) {
                         event.marginLeft = i * 100;
-                        event.width = 1200 - prevEvent.marginLeft;
+                        event.width = EVENT_MAX_WIDTH - prevEvent.marginLeft;
                     } else {
                         event.zIndex = 1
                     }
@@ -118,6 +137,34 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
                 event.top = (event.startTime - group.start) * 48;
             }
         }
+    }
+
+    groupEvents() {
+        let sortedEvents = this.events.sort((event1: any, event2: any) => event1.startTime - event2.startTime);
+        let groupedEvents = [];
+        let currGroup;
+        for (let event of sortedEvents) {
+            if (groupedEvents.length == 0) {
+                groupedEvents.push({ start: event.startTime, end: event.endTime, events: [event] });
+                currGroup = groupedEvents[groupedEvents.length - 1];
+            } else {
+                if (event.startTime < currGroup?.end) {
+                    if (currGroup && currGroup.end < event.endTime) {
+                        currGroup.end = event.endTime;
+                    }
+                    currGroup?.events.push(event);
+                } else {
+                    groupedEvents.push({ start: event.startTime, end: event.endTime, events: [event] });
+                    currGroup = groupedEvents[groupedEvents.length - 1];
+                }
+            }
+        }
+
+        //sort longest -> shortest group events
+        for (let group of groupedEvents) {
+            group.events.sort((event1: any, event2: any) => event2.interval - event1.interval);
+        }
+        this.groupedEvents = groupedEvents;
     }
 
     dragStart(event: any, calendarEvent: any, eventPos: any) {
@@ -154,54 +201,5 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
         event.target.appendChild(document.getElementById(id));
 
         this.setEventsPositions();
-    }
-
-    groupEvents() {
-        let sortedEvents = this.events.sort((event1: any, event2: any) => event1.startTime - event2.startTime);
-        let groupedEvents = [];
-        for (let event of sortedEvents) {
-            if (groupedEvents.length == 0) {
-                groupedEvents.push({ start: event.startTime, end: event.endTime, events: [event] });
-            } else {
-                let partOfGroup = false;
-                for (let group of groupedEvents) {
-                    if (group.end > event.startTime) {
-                        if (group.end < event.endTime) {
-                            group.end = event.endTime;
-                        }
-                        group.events.push(event);
-                        partOfGroup = true;
-                        break;
-                    }
-                }
-                if (!partOfGroup) {
-                    groupedEvents.push({ start: event.startTime, end: event.endTime, events: [event] });
-                }
-            }
-        }
-
-        //sort longest -> shortest group events
-        for (let group of groupedEvents) {
-            group.events.sort((event1: any, event2: any) => event2.interval - event1.interval);
-        }
-        this.groupedEvents = groupedEvents;
-    }
-
-    setEventProperties(event: any) {
-        let startTime = Number(event.starts.substring(0, 2));
-        let endTime = Number(event.ends.substring(0, 2));
-        let duration = `${startTime % 12 == 0 ? '12' : startTime % 12}${startTime <= 11 && endTime > 11 ? 'am' : ''} - 
-                ${endTime % 12 == 0 ? '12' : endTime % 12}${endTime < 11 ? 'am' : 'pm'}`;
-        let interval = endTime - startTime;
-        let elemHeight = interval > 0 ? interval * 48 : 48;
-
-        Object.assign(event,
-            {
-                interval,
-                startTime,
-                endTime,
-                duration,
-                elemHeight,
-            })
     }
 }
