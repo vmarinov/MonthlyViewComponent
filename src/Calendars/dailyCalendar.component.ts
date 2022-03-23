@@ -129,7 +129,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
                     let prevEvent = group.events[i - 1];
                     if (prevEvent.startTime == event.startTime || prevEvent.endTime > event.startTime) {
                         event.marginLeft = i * 100;
-                        event.width = EVENT_MAX_WIDTH - prevEvent.marginLeft;
+                        event.width = EVENT_MAX_WIDTH - event.marginLeft;
                     } else {
                         event.zIndex = 1
                     }
