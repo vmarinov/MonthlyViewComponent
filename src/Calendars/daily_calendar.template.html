@@ -23,8 +23,10 @@
         <span *ngFor="let event of hourEvent.value.events; let i = index" class="hourly-event"
             [id]="event.name + event.startTime"
             draggable="true"
+            [style.width.px]="event.width"
             [style.height.px]="event.elemHeight"
-            [style.z-index]="i + 1"
+            [style.z-index]="event.zIndex"
+            [style.top.px]="event.top"
             [style.margin-left.px]="event.marginLeft"
             (dragstart)="dragStart($event, event, i)">
             {{ event.name }} {{ event.duration }}      
