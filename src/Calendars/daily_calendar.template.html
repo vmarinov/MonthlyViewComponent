@@ -14,22 +14,22 @@
 </div>
 <div id="daily-calendar-layout">
     <div *ngFor="let hourEvent of hoursAndEvents | keyvalue" class="time" 
-        [attr.hour]="hourEvent.key"
-        (drop)="onDrop($event)" 
-        (dragover)="onDragOver($event)">
+        [attr.hour]="hourEvent.key">
         <span class="hour">
            {{ hourEvent.value.hour }}
         </span>
         <span *ngFor="let event of hourEvent.value.events; let i = index" class="hourly-event"
             [id]="event.name + event.startTime"
-            draggable="true"
+            draggable="false"
             [style.width.px]="event.width"
             [style.height.px]="event.elemHeight"
             [style.z-index]="event.zIndex"
             [style.top.px]="event.top"
             [style.margin-left.px]="event.marginLeft"
-            (dragstart)="dragStart($event, event, i)">
-            {{ event.name }} {{ event.duration }}      
+            (dragstart)="dragStart($event, event, i)"
+            (mousedown)="onMouseDown($event)">
+            {{ event.name }}
+            {{ event.duration }}
         </span>
     </div>
 </div>

@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, Renderer2 } from "@angular/core";
 import { Subscription } from "rxjs";
 import { CalendarEventsService } from "src/Services/calendarEventsService.class";
 
 const HRS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
-const EVENT_MAX_WIDTH = 1100;
+const EVENT_MAX_WIDTH = 1200;
 
 @Component({
     selector: 'daily-calendar',
@@ -23,9 +23,13 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     events: any;
     groupedEvents: any;
     draggedEvent: any;
+    mouseMoveSub: any;
+    targetEvent: any;
+    targetPos: any;
 
     constructor(@Inject('CalendarEventsService') private calendarEventsService: CalendarEventsService,
-        @Inject('weekDays') private weekDays: any, private changeRef: ChangeDetectorRef) {
+        @Inject('weekDays') private weekDays: any, private changeRef: ChangeDetectorRef,
+        private renderer: Renderer2) {
 
         this.eventsSubscription = this.calendarEventsService.eventsShown$.subscribe((events: any) => {
             this.clearEvents();
@@ -45,10 +49,12 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
             hour += hr <= 11 ? ' AM' : ' PM'
             this.hoursAndEvents.set(hr, { hour, events: [] });
         }
+        this.mouseMoveSub = this.renderer.listen('window', 'mousemove', this.onMouseMove.bind(this));
     }
 
     ngOnDestroy(): void {
         this.eventsSubscription.unsubscribe();
+        this.mouseMoveSub.unsubscribe();
     }
 
     parseTime(time: any): number {
@@ -121,14 +127,15 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     // try to put events in groups depending on duration overlaps and then determine z-index and margins
     setEventsPositions() {
         for (let group of this.groupedEvents) {
+            console.log(group);
             for (let i = 0; i < group.events.length; i++) {
                 let event = group.events[i];
                 event.zIndex = i + 1;
                 event.width = EVENT_MAX_WIDTH;
                 if (i > 0) {
                     let prevEvent = group.events[i - 1];
-                    if (prevEvent.startTime == event.startTime || prevEvent.endTime > event.startTime) {
-                        event.marginLeft = i * 100;
+                    if (prevEvent.endTime > event.startTime) {
+                        event.marginLeft = i * 150;
                         event.width = EVENT_MAX_WIDTH - event.marginLeft;
                     } else {
                         event.zIndex = 1
@@ -194,12 +201,35 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
         event.dataTransfer.clearData();
 
         let id = event.dataTransfer.getData("text/plain");
-        // let target = event.target;
-        // while (target?.class != 'time') {
-        //     target = target.parentElement;
-        // }
         event.target.appendChild(document.getElementById(id));
 
         this.setEventsPositions();
+    }
+
+    onMouseDown(event: any) {
+        event.preventDefault();
+        event.target.style.cursor = 'move';
+        this.targetEvent = event.target;
+        this.targetEvent.style.zIndex = 999;
+        this.targetEvent.style.top = `${event.clientY}px`;
+    }
+
+    onMouseMove(event: any) {
+        let posY = event.clientY;
+        if (this.targetEvent) {
+            this.targetEvent.style.top = `${posY}px`;
+            if (posY % 48 == 0) {
+                this.targetPos = posY;
+            }
+        }
+
+        if (event.buttons == 0 && this.targetEvent) {
+            if (this.targetPos) {
+                this.targetEvent.style.top = `${this.targetPos}px`;
+                this.targetPos = undefined;
+            }
+            this.targetEvent.style.cursor = 'pointer';
+            this.targetEvent = undefined;
+        }
     }
 }
