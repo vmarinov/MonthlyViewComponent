@@ -19,17 +19,18 @@ export class WeeklyCalendarComponent implements OnDestroy {
     dateSubscription: any;
     eventSubscription: any;
 
-    constructor(@Inject('CalendarEventsService') private calendarEventsService: CalendarEventsService, 
+    constructor(@Inject('CalendarEventsService') private calendarEventsService: CalendarEventsService,
         @Inject('weekDays') public weekDays: any, private changeRef: ChangeDetectorRef) {
         this.dateSubscription = this.calendarEventsService.dateShown$.subscribe((date: any) => {
+            this.changeRef.markForCheck();
             this.shownDate = date;
             this.setWeek();
-            this.changeRef.detectChanges();
         });
 
         this.eventSubscription = this.calendarEventsService.eventsShown$.subscribe((events: any) => {
             this.events = events;
             if (this.events) {
+                this.changeRef.markForCheck();
                 this.events.forEach((element: any) => {
                     Object.assign(element,
                         {
@@ -37,7 +38,6 @@ export class WeeklyCalendarComponent implements OnDestroy {
                             startTime: element.starts.substring(0, 2)
                         })
                 });
-                this.changeRef.detectChanges();
             }
         });
     }

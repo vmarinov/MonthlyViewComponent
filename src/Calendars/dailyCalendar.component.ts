@@ -4,232 +4,318 @@ import { CalendarEventsService } from "src/Services/calendarEventsService.class"
 
 const HRS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 const EVENT_MAX_WIDTH = 1200;
+const EVENT_MIN_HEIGHT = 12;
+const EVENT_MAX_HEIGHT = 48;
+const VIEW_HEIGHT = 560;
 
 @Component({
-    selector: 'daily-calendar',
-    templateUrl: 'daily_calendar.template.html',
-    styleUrls: ['dailyCalendar.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'daily-calendar',
+  templateUrl: 'daily_calendar.template.html',
+  styleUrls: ['dailyCalendar.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DailyCalendarComponent implements OnInit, OnDestroy {
-    currentDate = new Date();
-    selectedDate!: number;
-    shownDate: any;
-    dayOfWeek!: string;
-    eventsSubscription: Subscription;
-    dateSubscription: Subscription;
-    hours = HRS;
-    hoursAndEvents: Map<any, any> = new Map<any, any>();
-    events: any;
-    groupedEvents: any;
-    draggedEvent: any;
-    mouseMoveSub: any;
-    targetEvent: any;
-    targetPos: any;
+  currentDate = new Date();
+  selectedDate!: number;
+  shownDate: any;
+  dayOfWeek!: string;
+  eventsSubscription: Subscription;
+  dateSubscription: Subscription;
+  hours = HRS;
+  hoursAndEvents: Map<any, any> = new Map<any, any>();
+  events: any;
+  groupedEvents: any;
+  draggedEvent: any;
+  mouseMoveEvent: any;
+  draggedEventEl: any;
+  draggedEventLastPos: any;
+  targetEvent: any;
+  layoutEl: any;
+  offsetTop: any;
 
-    constructor(@Inject('CalendarEventsService') private calendarEventsService: CalendarEventsService,
-        @Inject('weekDays') private weekDays: any, private changeRef: ChangeDetectorRef,
-        private renderer: Renderer2) {
+  constructor(@Inject('CalendarEventsService') private calendarEventsService: CalendarEventsService,
+    @Inject('weekDays') private weekDays: any, private changeRef: ChangeDetectorRef,
+    private renderer: Renderer2) {
 
-        this.eventsSubscription = this.calendarEventsService.eventsShown$.subscribe((events: any) => {
-            this.clearEvents();
-            this.setEvents(events);
-        });
-        this.dateSubscription = this.calendarEventsService.dateShown$.subscribe((date: any) => {
-            this.changeRef.markForCheck();
-            this.setDate(date);
-            this.clearEvents();
-            this.setEvents(this.calendarEventsService.getEvents());
-        });
+    this.dateSubscription = this.calendarEventsService.dateShown$.subscribe((date: any) => {
+      this.setDate(date);
+      this.clearEvents();
+      this.setEvents(this.calendarEventsService.getEvents());
+    });
+
+    this.eventsSubscription = this.calendarEventsService.eventsShown$.subscribe((events: any) => {
+      this.clearEvents();
+      this.setEvents(events);
+    });
+  }
+
+  ngOnInit(): void {
+    for (let hr of this.hours) {
+      let hour = hr % 12 == 0 ? '12' : `${hr % 12}`;
+      hour += hr <= 11 ? ' AM' : ' PM'
+      this.hoursAndEvents.set(hr, { hour, events: [] });
     }
+    this.layoutEl = document.getElementById('daily-calendar-layout');
+  }
 
-    ngOnInit(): void {
-        for (let hr of this.hours) {
-            let hour = hr % 12 == 0 ? '12' : `${hr % 12}`;
-            hour += hr <= 11 ? ' AM' : ' PM'
-            this.hoursAndEvents.set(hr, { hour, events: [] });
+  ngOnDestroy(): void {
+    this.eventsSubscription.unsubscribe();
+    if (this.mouseMoveEvent) {
+      this.mouseMoveEvent();
+    }
+  }
+
+  parseTime(time: any): number {
+    let [hr, _] = time.split(':');
+    return hr;
+  }
+
+  parseEventDuration(start: any, end: any) {
+    let startHour = Number(start.substring(0, 2));
+    let startMinutes = Number(start.substring(3, 5));
+    let endHour = Number(end.substring(0, 2));
+    let endMinutes = Number(end.substring(3, 5));
+    let startTime = `${startHour % 12 == 0 ?
+      `12${startMinutes != 0 ? `:${startMinutes}` : ''}` :
+      `${startHour % 12}${startMinutes != 0 ? `:${startMinutes}` : ''}`}${startHour <= 11 && endHour > 11 ? 'am' : ''}`;
+
+    let endTime = `${endHour % 12 == 0 ?
+      `12${endMinutes != 0 ? `:${endMinutes}` : ''}` :
+      `${endHour % 12}${endMinutes != 0 ? `:${endMinutes}` : ''}`}${endHour < 11 ? 'am' : 'pm'}`;
+
+    let durationTxt = startTime + ' - ' + endTime;
+
+    return <any>[startHour, endHour, startMinutes, endMinutes, durationTxt];
+  }
+
+  setDate(date: any) {
+    this.shownDate = date;
+    this.selectedDate = date.getDate();
+    this.dayOfWeek = this.weekDays[date.getDay()];
+  }
+
+  setEvents(events: any) {
+    if (!events) {
+      return;
+    }
+    this.changeRef.markForCheck();
+    this.events = events;
+    this.events = this.events.filter((event: any) => {
+      return event.date.getDate() == this.shownDate.getDate() &&
+        (event.date.getMonth() == this.shownDate.getMonth() ||
+          event.date.getMonth() == this.shownDate.getMonth() - 1 ||
+          event.date.getMonth() == this.shownDate.getMonth() + 1) &&
+        event.date.getFullYear() == this.shownDate.getFullYear()
+    });
+
+    this.events.forEach((event: any) => {
+      this.setEventProperties(event);
+    });
+
+    if (this.events.length > 0) {
+      this.groupEvents();
+      this.setEventsPositions();
+      for (let group of this.groupedEvents) {
+        let hourlyEventObj = this.hoursAndEvents.get(Number(group.start));
+        hourlyEventObj.events = group.events;
+      }
+    }
+  }
+
+  clearEvents() {
+    for (let hour of this.hoursAndEvents.values()) {
+      hour.events = [];
+    }
+    this.groupedEvents = [];
+  }
+
+  setEventProperties(event: any) {
+    let [startHour, endHour, startMinutes, endMinutes, duration] = this.parseEventDuration(event.starts, event.ends);
+    let startInMin = (startHour * 60) + startMinutes;
+    let endInMin = (endHour * 60) + endMinutes;
+    let interval = endInMin - startInMin;
+    let elemHeight = (interval / 15) * EVENT_MIN_HEIGHT;
+
+    Object.assign(event,
+      {
+        startInMin,
+        endInMin,
+        interval,
+        startHour,
+        endHour,
+        duration,
+        elemHeight,
+      })
+  }
+
+  // event positioning fn
+  // when events have same start hour the shorter event should always have higher z-index and they are shown in longest -> shortest order
+  // events that start 1 hour later should have margin left in order for the previous event to show
+  // try to put events in groups depending on duration overlaps and then determine z-index and margins
+  setEventsPositions() {
+    this.changeRef.markForCheck();
+    for (let group of this.groupedEvents) {
+      for (let i = 0; i < group.events.length; i++) {
+        let event = group.events[i];
+        event.zIndex = i + 1;
+        event.width = EVENT_MAX_WIDTH;
+        if (i > 0) {
+          let prevEvent = group.events[i - 1];
+          if (prevEvent.endHour > event.startHour) {
+            event.marginLeft = i * 150;
+            event.width = EVENT_MAX_WIDTH - event.marginLeft;
+          } else {
+            event.zIndex = 1
+          }
         }
-        this.mouseMoveSub = this.renderer.listen('window', 'mousemove', this.onMouseMove.bind(this));
+        event.top = ((event.startInMin - (group.start * 60)) / 15) * EVENT_MIN_HEIGHT;
+      }
+    }
+  }
+
+  groupEvents() {
+    let sortedEvents = this.events.sort((event1: any, event2: any) => event1.startHour - event2.startHour);
+    let groupedEvents = [];
+    let currGroup = { start: sortedEvents[0].startHour, end: sortedEvents[0].endHour, events: [sortedEvents[0]] };
+    groupedEvents.push(currGroup);
+
+    for (let i = 1; i < sortedEvents.length - 1; i++) {
+      let event = sortedEvents[i];
+      if (event.startHour < currGroup.end) {
+        currGroup.end = currGroup.end > event.endHour ? currGroup.end : event.endHour;
+        currGroup.events.push(event);
+      } else {
+        currGroup = { start: event.startHour, end: event.endHour, events: [event] };
+        groupedEvents.push(currGroup);
+      }
+    }
+    this.groupedEvents = groupedEvents;
+    this.sortAndIdEvents();
+  }
+
+  sortAndIdEvents() {
+    //sort longest -> shortest group events
+    for (let group of this.groupedEvents) {
+      group.events.sort((event1: any, event2: any) => event2.interval - event1.interval);
+      for (let i = 0; i < group.events.length; i++) {
+        group.events[i].id = i;
+      }
+    }
+  }
+
+  changeEventGroup(calendarEvent: any) {
+    let removed = false;
+    let added = false;
+    for (let group of this.groupedEvents) {
+      if (removed && added) {
+        break;
+      }
+
+      if (group.end > calendarEvent.prevStartHour && group.start <= calendarEvent.prevStartHour) {
+        group.events.splice(calendarEvent.id, 1);
+        removed = true;
+      }
+
+      if (group.start <= calendarEvent.startHour && group.end > calendarEvent.startHour) {
+        group.events.push(calendarEvent);
+        group.end = group.end > calendarEvent.endHour ? group.end : calendarEvent.endHour;
+        added = true;
+      }
     }
 
-    ngOnDestroy(): void {
-        this.eventsSubscription.unsubscribe();
-        this.mouseMoveSub.unsubscribe();
+    if (!added) {
+      this.groupedEvents.push({ start: calendarEvent.startHour, end: calendarEvent.endHour, events: [calendarEvent] });
+    }
+    this.sortAndIdEvents();
+    this.setEventsPositions();
+  }
+
+  dragStart(event: any, calendarEvent: any, eventPos: any) {
+    this.draggedEvent = calendarEvent;
+    this.draggedEvent.pos = eventPos;
+    event.dataTransfer.setData("text/plain", event.target.id);
+    event.target.style.cursor = 'move';
+    event.target.style.opacity = 1;
+  }
+
+  onDragOver(event: any) {
+    event.preventDefault();
+  }
+
+  onDrop(event: any) {
+    let eventsObj = this.hoursAndEvents.get(Number(this.draggedEvent.startHour));
+    if (eventsObj) {
+      eventsObj.events.splice(this.draggedEvent.pos, 1);
     }
 
-    parseTime(time: any): number {
-        let [hr, _] = time.split(':');
-        return hr;
+    let newStartHour = event.target.attributes?.hour?.value;
+    this.draggedEvent.starts = newStartHour;
+    this.draggedEvent.ends = `${Number(newStartHour) + this.draggedEvent.interval}`;
+    this.setEventProperties(this.draggedEvent);
+    let hourEvent = this.hoursAndEvents.get(Number(newStartHour));
+    hourEvent.events.push(this.draggedEvent);
+    event.dataTransfer.clearData();
+
+    let id = event.dataTransfer.getData("text/plain");
+    event.target.appendChild(document.getElementById(id));
+
+    this.setEventsPositions();
+  }
+
+  onMouseDown(event: any, calendarEvent: any) {
+    if (event.button != 0) {
+      return;
+    }
+    event.preventDefault();
+    this.targetEvent = calendarEvent;
+    this.targetEvent.prevStartHour = this.targetEvent.startHour;
+    this.draggedEventEl = event.target;
+    this.draggedEventEl.style.zIndex = 999;
+    this.draggedEventEl.style.cursor = 'move';
+    this.draggedEventEl.style.marginLeft = '0px';
+    this.draggedEventEl.style.width = `${EVENT_MAX_WIDTH}px`;
+    this.mouseMoveEvent = this.renderer.listen(this.layoutEl, 'mousemove', this.onMouseMove.bind(this));
+    this.offsetTop = this.draggedEventEl.offsetTop - event.clientY;
+  }
+
+  onMouseMove(event: any) {
+    let posY = event.clientY;
+    if (this.draggedEventEl) {
+      // if (VIEW_HEIGHT < posY) {
+      //     this.layoutEl?.scrollBy(0, 3);
+      // }
+
+      // if (VIEW_HEIGHT > posY) {
+      //     this.layoutEl?.scrollBy(0, -3);
+      // }
+      let newPos = posY + this.offsetTop;
+      this.draggedEventEl.style.top = `${newPos}px`;
+      if (newPos % EVENT_MIN_HEIGHT == 0) {
+        this.targetEvent.startInMin += newPos > this.draggedEventLastPos ? 15 : -15;
+        console.log('startInMin', this.targetEvent.startInMin);
+        this.draggedEventLastPos = posY + this.offsetTop;
+      }
     }
 
-    setDate(date: any) {
-        this.shownDate = date;
-        this.selectedDate = date.getDate();
-        this.dayOfWeek = this.weekDays[date.getDay()];
-    }
-
-    setEvents(events: any) {
-        this.events = events;
-        if (!this.events) {
-            return;
+    if (event.buttons == 0) {
+      let target = event.target;
+      if (target.className != 'time') {
+        while (target.className != 'time') {
+          target = target.parentElement;
         }
-        this.events = this.events.filter((event: any) => {
-            return event.date.getDate() == this.shownDate.getDate() &&
-                (event.date.getMonth() == this.shownDate.getMonth() ||
-                    event.date.getMonth() == this.shownDate.getMonth() - 1 ||
-                    event.date.getMonth() == this.shownDate.getMonth() + 1) &&
-                event.date.getFullYear() == this.shownDate.getFullYear()
-        });
-
-        this.events.forEach((event: any) => {
-            this.setEventProperties(event);
-        });
-
-        if (this.events.length > 0) {
-            this.groupEvents();
-            this.setEventsPositions();
-            for (let group of this.groupedEvents) {
-                let hourlyEventObj = this.hoursAndEvents.get(Number(group.start));
-                hourlyEventObj.events = group.events;
-            }
-        }
-        this.changeRef.detectChanges();
+      }
+      let newStartHr = Number(target.attributes.hour.value);
+      this.targetEvent.startHour = newStartHr;
+      this.targetEvent.endHour = Math.round(newStartHr + (this.targetEvent.interval) / 60);
+      this.changeEventGroup(this.targetEvent);
+      this.draggedEventEl.style.cursor = 'pointer';
+      this.draggedEventEl.style.marginLeft = `${this.targetEvent.marginLeft}px`;
+      this.draggedEventEl.style.zIndex = this.targetEvent.zIndex;
+      this.draggedEventEl.style.top = `${this.targetEvent.top}px`;
+      this.draggedEventEl.style.width = `${this.targetEvent.width}px`;
+      this.draggedEventEl = undefined;
+      this.mouseMoveEvent();
+      this.mouseMoveEvent = undefined;
     }
-
-    clearEvents() {
-        for (let hour of this.hoursAndEvents.values()) {
-            hour.events = [];
-        }
-        this.groupedEvents = [];
-    }
-
-    setEventProperties(event: any) {
-        let startTime = Number(event.starts.substring(0, 2));
-        let endTime = Number(event.ends.substring(0, 2));
-        let duration = `${startTime % 12 == 0 ? '12' : startTime % 12}${startTime <= 11 && endTime > 11 ? 'am' : ''} - 
-                ${endTime % 12 == 0 ? '12' : endTime % 12}${endTime < 11 ? 'am' : 'pm'}`;
-        let interval = endTime - startTime;
-        let elemHeight = interval > 0 ? interval * 48 : 48;
-
-        Object.assign(event,
-            {
-                interval,
-                startTime,
-                endTime,
-                duration,
-                elemHeight,
-            })
-    }
-
-    // event positioning fn
-    // when events have same start hour the shorter event should always have higher z-index and they are shown in longest -> shortest order
-    // events that start 1 hour later should have margin left in order for the previous event to show
-    // try to put events in groups depending on duration overlaps and then determine z-index and margins
-    setEventsPositions() {
-        for (let group of this.groupedEvents) {
-            console.log(group);
-            for (let i = 0; i < group.events.length; i++) {
-                let event = group.events[i];
-                event.zIndex = i + 1;
-                event.width = EVENT_MAX_WIDTH;
-                if (i > 0) {
-                    let prevEvent = group.events[i - 1];
-                    if (prevEvent.endTime > event.startTime) {
-                        event.marginLeft = i * 150;
-                        event.width = EVENT_MAX_WIDTH - event.marginLeft;
-                    } else {
-                        event.zIndex = 1
-                    }
-                }
-                event.top = (event.startTime - group.start) * 48;
-            }
-        }
-    }
-
-    groupEvents() {
-        let sortedEvents = this.events.sort((event1: any, event2: any) => event1.startTime - event2.startTime);
-        let groupedEvents = [];
-        let currGroup;
-        for (let event of sortedEvents) {
-            if (groupedEvents.length == 0) {
-                groupedEvents.push({ start: event.startTime, end: event.endTime, events: [event] });
-                currGroup = groupedEvents[groupedEvents.length - 1];
-            } else {
-                if (event.startTime < currGroup?.end) {
-                    if (currGroup && currGroup.end < event.endTime) {
-                        currGroup.end = event.endTime;
-                    }
-                    currGroup?.events.push(event);
-                } else {
-                    groupedEvents.push({ start: event.startTime, end: event.endTime, events: [event] });
-                    currGroup = groupedEvents[groupedEvents.length - 1];
-                }
-            }
-        }
-
-        //sort longest -> shortest group events
-        for (let group of groupedEvents) {
-            group.events.sort((event1: any, event2: any) => event2.interval - event1.interval);
-        }
-        this.groupedEvents = groupedEvents;
-    }
-
-    dragStart(event: any, calendarEvent: any, eventPos: any) {
-        this.draggedEvent = calendarEvent;
-        this.draggedEvent.pos = eventPos;
-        event.dataTransfer.setData("text/plain", event.target.id);
-        event.target.style.cursor = 'move';
-        event.target.style.opacity = 1;
-    }
-
-    onDragOver(event: any) {
-        event.preventDefault();
-    }
-
-    onDrop(event: any) {
-        let eventsObj = this.hoursAndEvents.get(Number(this.draggedEvent.startTime));
-        if (eventsObj) {
-            eventsObj.events.splice(this.draggedEvent.pos, 1);
-        }
-
-        let newStartHour = event.target.attributes?.hour?.value;
-        this.draggedEvent.starts = newStartHour;
-        this.draggedEvent.ends = `${Number(newStartHour) + this.draggedEvent.interval}`;
-        this.setEventProperties(this.draggedEvent);
-        let hourEvent = this.hoursAndEvents.get(Number(newStartHour));
-        hourEvent.events.push(this.draggedEvent);
-        event.dataTransfer.clearData();
-
-        let id = event.dataTransfer.getData("text/plain");
-        event.target.appendChild(document.getElementById(id));
-
-        this.setEventsPositions();
-    }
-
-    onMouseDown(event: any) {
-        event.preventDefault();
-        event.target.style.cursor = 'move';
-        this.targetEvent = event.target;
-        this.targetEvent.style.zIndex = 999;
-        this.targetEvent.style.top = `${event.clientY}px`;
-    }
-
-    onMouseMove(event: any) {
-        let posY = event.clientY;
-        if (this.targetEvent) {
-            this.targetEvent.style.top = `${posY}px`;
-            if (posY % 48 == 0) {
-                this.targetPos = posY;
-            }
-        }
-
-        if (event.buttons == 0 && this.targetEvent) {
-            if (this.targetPos) {
-                this.targetEvent.style.top = `${this.targetPos}px`;
-                this.targetPos = undefined;
-            }
-            this.targetEvent.style.cursor = 'pointer';
-            this.targetEvent = undefined;
-        }
-    }
+  }
 }

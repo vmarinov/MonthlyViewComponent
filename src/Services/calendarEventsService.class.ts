@@ -46,7 +46,7 @@ export class CalendarEventsService {
       name: 'Sleep Walk', starts: '13:00', ends: '15:00', calendar: 'emilia', date: new Date(2022, 3, 2),
     },
     {
-      name: 'Walk the dog', starts: '08:00', ends: '09:00', calendar: 'emilia', date: new Date(2022, 3, 2),
+      name: 'Walk the dog', starts: '08:15', ends: '09:30', calendar: 'emilia', date: new Date(2022, 3, 2),
     },
     {
       name: 'Long', starts: '17:00', ends: '23:00', calendar: 'emilia', date: new Date(2022, 3, 2),

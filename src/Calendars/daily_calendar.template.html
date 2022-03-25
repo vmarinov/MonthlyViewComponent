@@ -19,7 +19,6 @@
            {{ hourEvent.value.hour }}
         </span>
         <span *ngFor="let event of hourEvent.value.events; let i = index" class="hourly-event"
-            [id]="event.name + event.startTime"
             draggable="false"
             [style.width.px]="event.width"
             [style.height.px]="event.elemHeight"
@@ -27,8 +26,9 @@
             [style.top.px]="event.top"
             [style.margin-left.px]="event.marginLeft"
             (dragstart)="dragStart($event, event, i)"
-            (mousedown)="onMouseDown($event)">
+            (mousedown)="onMouseDown($event, event)">
             {{ event.name }}
+            <br>
             {{ event.duration }}
         </span>
     </div>
