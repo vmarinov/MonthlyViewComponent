@@ -65,9 +65,13 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     }
   }
 
-  parseTime(time: any): number {
-    let [hr, _] = time.split(':');
-    return hr;
+  parseTime(minutes: any) {
+    let hr: any = Math.floor(minutes / 60);
+    let min: any = ((minutes / 60) - hr) * 60;
+    hr = String(hr).padStart(2, '0');
+    min = String(min).padStart(2, '0');
+
+    return `${hr}:${min}`;
   }
 
   parseEventDuration(start: any, end: any) {
@@ -228,6 +232,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     }
     this.sortAndIdEvents();
     this.setEventsPositions();
+    console.log(this.groupedEvents);
   }
 
   dragStart(event: any, calendarEvent: any, eventPos: any) {
@@ -281,18 +286,16 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
   onMouseMove(event: any) {
     let posY = event.clientY;
     if (this.draggedEventEl) {
-      // if (VIEW_HEIGHT < posY) {
-      //     this.layoutEl?.scrollBy(0, 3);
-      // }
-
-      // if (VIEW_HEIGHT > posY) {
-      //     this.layoutEl?.scrollBy(0, -3);
-      // }
+      // this.scrollView(posY);
       let newPos = posY + this.offsetTop;
       this.draggedEventEl.style.top = `${newPos}px`;
       if (newPos % EVENT_MIN_HEIGHT == 0) {
         this.targetEvent.startInMin += newPos > this.draggedEventLastPos ? 15 : -15;
-        console.log('startInMin', this.targetEvent.startInMin);
+        this.targetEvent.endInMin = this.targetEvent.startInMin + this.targetEvent.interval;
+        this.targetEvent.starts = this.parseTime(this.targetEvent.startInMin);
+        this.targetEvent.ends = this.parseTime(this.targetEvent.endInMin);
+        let [f, d, g, s, duration] = this.parseEventDuration(this.targetEvent.starts, this.targetEvent.ends); //change fn return
+        this.draggedEventEl.innerText = `${this.targetEvent.name}\n ${duration}`;
         this.draggedEventLastPos = posY + this.offsetTop;
       }
     }
@@ -308,14 +311,29 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
       this.targetEvent.startHour = newStartHr;
       this.targetEvent.endHour = Math.round(newStartHr + (this.targetEvent.interval) / 60);
       this.changeEventGroup(this.targetEvent);
-      this.draggedEventEl.style.cursor = 'pointer';
-      this.draggedEventEl.style.marginLeft = `${this.targetEvent.marginLeft}px`;
-      this.draggedEventEl.style.zIndex = this.targetEvent.zIndex;
-      this.draggedEventEl.style.top = `${this.targetEvent.top}px`;
-      this.draggedEventEl.style.width = `${this.targetEvent.width}px`;
+      this.setDraggedElProperties();
+     
       this.draggedEventEl = undefined;
       this.mouseMoveEvent();
       this.mouseMoveEvent = undefined;
     }
+  }
+
+  setDraggedElProperties() {
+    this.draggedEventEl.style.cursor = 'pointer';
+    this.draggedEventEl.style.marginLeft = `${this.targetEvent.marginLeft}px`;
+    this.draggedEventEl.style.zIndex = this.targetEvent.zIndex;
+    this.draggedEventEl.style.top = `${this.targetEvent.top}px`;
+    this.draggedEventEl.style.width = `${this.targetEvent.width}px`;
+  }
+
+  scrollView(posY: any) {
+     if (VIEW_HEIGHT < posY) {
+          this.layoutEl?.scrollBy(0, 3);
+      }
+
+      if (VIEW_HEIGHT > posY) {
+          this.layoutEl?.scrollBy(0, -3);
+      }
   }
 }
