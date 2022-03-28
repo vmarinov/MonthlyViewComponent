@@ -25,13 +25,11 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
   hoursAndEvents: Map<any, any> = new Map<any, any>();
   events: any;
   groupedEvents: any;
-  draggedEvent: any;
   mouseMoveEvent: any;
   draggedEventEl: any;
   draggedEventLastPos: any;
   targetEvent: any;
-  layoutEl: any;
-  offsetTop: any;
+  layoutEl!: HTMLElement;
 
   constructor(@Inject('CalendarEventsService') private calendarEventsService: CalendarEventsService,
     @Inject('weekDays') private weekDays: any, private changeRef: ChangeDetectorRef,
@@ -45,7 +43,9 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
 
     this.eventsSubscription = this.calendarEventsService.eventsShown$.subscribe((events: any) => {
       this.clearEvents();
-      this.setEvents(events);
+      if (events) {
+        this.setEvents(events);
+      }
     });
   }
 
@@ -55,7 +55,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
       hour += hr <= 11 ? ' AM' : ' PM'
       this.hoursAndEvents.set(hr, { hour, events: [] });
     }
-    this.layoutEl = document.getElementById('daily-calendar-layout');
+    this.layoutEl = document.getElementById('daily-calendar-layout') as HTMLElement;
   }
 
   ngOnDestroy(): void {
@@ -119,10 +119,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     if (this.events.length > 0) {
       this.groupEvents();
       this.setEventsPositions();
-      for (let group of this.groupedEvents) {
-        let hourlyEventObj = this.hoursAndEvents.get(Number(group.start));
-        hourlyEventObj.events = group.events;
-      }
+      this.setHourlyEvents();
     }
   }
 
@@ -152,6 +149,14 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
       })
   }
 
+  setHourlyEvents() {
+    for (let group of this.groupedEvents) {
+      let hourlyEventObj = this.hoursAndEvents.get(Number(group.start));
+      if (hourlyEventObj) {
+        hourlyEventObj.events = group.events;
+      }
+    }
+  }
   // event positioning fn
   // when events have same start hour the shorter event should always have higher z-index and they are shown in longest -> shortest order
   // events that start 1 hour later should have margin left in order for the previous event to show
@@ -163,6 +168,9 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
         let event = group.events[i];
         event.zIndex = i + 1;
         event.width = EVENT_MAX_WIDTH;
+        event.marginLeft = 0;
+        event.top = event.startHour * EVENT_MAX_HEIGHT;
+        event.top += ((event.startInMin - (event.startHour * 60)) / 15) * EVENT_MIN_HEIGHT;
         if (i > 0) {
           let prevEvent = group.events[i - 1];
           if (prevEvent.endHour > event.startHour) {
@@ -172,7 +180,6 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
             event.zIndex = 1
           }
         }
-        event.top = ((event.startInMin - (group.start * 60)) / 15) * EVENT_MIN_HEIGHT;
       }
     }
   }
@@ -230,41 +237,10 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     if (!added) {
       this.groupedEvents.push({ start: calendarEvent.startHour, end: calendarEvent.endHour, events: [calendarEvent] });
     }
+
     this.sortAndIdEvents();
     this.setEventsPositions();
-    console.log(this.groupedEvents);
-  }
-
-  dragStart(event: any, calendarEvent: any, eventPos: any) {
-    this.draggedEvent = calendarEvent;
-    this.draggedEvent.pos = eventPos;
-    event.dataTransfer.setData("text/plain", event.target.id);
-    event.target.style.cursor = 'move';
-    event.target.style.opacity = 1;
-  }
-
-  onDragOver(event: any) {
-    event.preventDefault();
-  }
-
-  onDrop(event: any) {
-    let eventsObj = this.hoursAndEvents.get(Number(this.draggedEvent.startHour));
-    if (eventsObj) {
-      eventsObj.events.splice(this.draggedEvent.pos, 1);
-    }
-
-    let newStartHour = event.target.attributes?.hour?.value;
-    this.draggedEvent.starts = newStartHour;
-    this.draggedEvent.ends = `${Number(newStartHour) + this.draggedEvent.interval}`;
-    this.setEventProperties(this.draggedEvent);
-    let hourEvent = this.hoursAndEvents.get(Number(newStartHour));
-    hourEvent.events.push(this.draggedEvent);
-    event.dataTransfer.clearData();
-
-    let id = event.dataTransfer.getData("text/plain");
-    event.target.appendChild(document.getElementById(id));
-
-    this.setEventsPositions();
+    this.setHourlyEvents();
   }
 
   onMouseDown(event: any, calendarEvent: any) {
@@ -280,60 +256,63 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     this.draggedEventEl.style.marginLeft = '0px';
     this.draggedEventEl.style.width = `${EVENT_MAX_WIDTH}px`;
     this.mouseMoveEvent = this.renderer.listen(this.layoutEl, 'mousemove', this.onMouseMove.bind(this));
-    this.offsetTop = this.draggedEventEl.offsetTop - event.clientY;
+    this.draggedEventEl.style.marginTop = '0px';
+    this.draggedEventLastPos = this.targetEvent.top;
   }
 
   onMouseMove(event: any) {
-    let posY = event.clientY;
+    let posY = event.pageY - this.layoutEl.getBoundingClientRect().top + this.layoutEl.scrollTop;
+    posY -= this.draggedEventEl.getBoundingClientRect().height / 2;
     if (this.draggedEventEl) {
-      // this.scrollView(posY);
-      let newPos = posY + this.offsetTop;
-      this.draggedEventEl.style.top = `${newPos}px`;
-      if (newPos % EVENT_MIN_HEIGHT == 0) {
-        this.targetEvent.startInMin += newPos > this.draggedEventLastPos ? 15 : -15;
+      this.draggedEventEl.style.top = `${posY}px`;
+      this.draggedEventEl.scrollIntoView({behavior: 'smooth', block: 'end'});
+      posY = Math.round(posY);
+      if (posY % EVENT_MIN_HEIGHT == 0) {
+        this.draggedEventEl.style.top = `${posY}px`;
+        let min = ((posY - this.draggedEventLastPos) / EVENT_MIN_HEIGHT) * 15;
+        this.targetEvent.startInMin += min;
         this.targetEvent.endInMin = this.targetEvent.startInMin + this.targetEvent.interval;
         this.targetEvent.starts = this.parseTime(this.targetEvent.startInMin);
         this.targetEvent.ends = this.parseTime(this.targetEvent.endInMin);
-        let [f, d, g, s, duration] = this.parseEventDuration(this.targetEvent.starts, this.targetEvent.ends); //change fn return
-        this.draggedEventEl.innerText = `${this.targetEvent.name}\n ${duration}`;
-        this.draggedEventLastPos = posY + this.offsetTop;
+        this.setEventProperties(this.targetEvent);
+        this.draggedEventEl.innerText = `${this.targetEvent.name}\n ${this.targetEvent.duration}`;
+        this.draggedEventLastPos = posY;
       }
     }
 
     if (event.buttons == 0) {
-      let target = event.target;
-      if (target.className != 'time') {
-        while (target.className != 'time') {
-          target = target.parentElement;
-        }
-      }
-      let newStartHr = Number(target.attributes.hour.value);
-      this.targetEvent.startHour = newStartHr;
-      this.targetEvent.endHour = Math.round(newStartHr + (this.targetEvent.interval) / 60);
-      this.changeEventGroup(this.targetEvent);
-      this.setDraggedElProperties();
-     
-      this.draggedEventEl = undefined;
-      this.mouseMoveEvent();
-      this.mouseMoveEvent = undefined;
+      this.onMouseUp();
     }
   }
 
+  onMouseUp() {
+    let newStartHr = Math.round(Math.ceil(this.draggedEventEl.style.top.substring(0, this.draggedEventEl.style.top.length - 2)) / EVENT_MAX_HEIGHT);
+    this.targetEvent.startHour = newStartHr;
+    this.targetEvent.endHour = Math.round(newStartHr + (this.targetEvent.interval / 60));
+    this.changeEventGroup(this.targetEvent);
+    this.setDraggedElProperties();
+    this.draggedEventEl = undefined;
+    this.mouseMoveEvent();
+    this.mouseMoveEvent = undefined;
+  }
+
   setDraggedElProperties() {
+    this.changeRef.markForCheck();
     this.draggedEventEl.style.cursor = 'pointer';
     this.draggedEventEl.style.marginLeft = `${this.targetEvent.marginLeft}px`;
     this.draggedEventEl.style.zIndex = this.targetEvent.zIndex;
     this.draggedEventEl.style.top = `${this.targetEvent.top}px`;
     this.draggedEventEl.style.width = `${this.targetEvent.width}px`;
+    this.draggedEventEl.innerText = `${this.targetEvent.name}\n ${this.targetEvent.duration}`;
   }
 
   scrollView(posY: any) {
-     if (VIEW_HEIGHT < posY) {
-          this.layoutEl?.scrollBy(0, 3);
-      }
+    if (VIEW_HEIGHT < posY) {
+      this.layoutEl?.scrollBy(0, 3);
+    }
 
-      if (VIEW_HEIGHT > posY) {
-          this.layoutEl?.scrollBy(0, -3);
-      }
+    if (VIEW_HEIGHT > posY) {
+      this.layoutEl?.scrollBy(0, -3);
+    }
   }
 }

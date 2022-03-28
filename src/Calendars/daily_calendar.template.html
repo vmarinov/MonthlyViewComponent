@@ -25,7 +25,6 @@
             [style.z-index]="event.zIndex"
             [style.top.px]="event.top"
             [style.margin-left.px]="event.marginLeft"
-            (dragstart)="dragStart($event, event, i)"
             (mousedown)="onMouseDown($event, event)">
             {{ event.name }}
             <br>&nbsp;
