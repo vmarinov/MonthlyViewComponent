@@ -1,0 +1,35 @@
+<div id="layout">
+    <div class="top-controls">
+        <div class="control">
+            <fa-icon [icon]="faPen"></fa-icon>
+        </div>
+        <div class="control">
+            <fa-icon [icon]="faTrashCan"></fa-icon>
+        </div>
+        <div class="control">
+            <fa-icon [icon]="faEllipsisVertical"></fa-icon>
+        </div>
+        <div class="control">
+            <fa-icon [icon]="faXmark"></fa-icon>
+        </div>
+    </div>
+    <div class="info">
+        <div class="icon" [style.color]="'blue'">
+            <fa-icon [icon]="faSquare"></fa-icon>
+        </div>
+        <div class="title">
+            <div class="event-name">
+                {{ event.name }}
+            </div>
+            {{ setTitle() }}
+        </div>
+        <div class="icon">
+            <fa-icon [icon]="faVideo"></fa-icon>
+        </div>
+        <div class="event-link">
+            <a class="event-button" href="#">Join with Google Meet</a>
+            <span style="display:inline-block;margin-left:100px;margin-right:15px;font-size: 16px;"><fa-icon [icon]="faClone"></fa-icon></span>
+            <div class="link-text">placeholder.link/fgewgewg</div>
+        </div>
+    </div>
+</div>

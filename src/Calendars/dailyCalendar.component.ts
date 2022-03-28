@@ -30,6 +30,8 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
   draggedEventLastPos: any;
   targetEvent: any;
   layoutEl!: HTMLElement;
+  selectedHour: any;
+  selectedEvent: any;
 
   constructor(@Inject('CalendarEventsService') private calendarEventsService: CalendarEventsService,
     @Inject('weekDays') private weekDays: any, private changeRef: ChangeDetectorRef,
@@ -258,6 +260,10 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     this.mouseMoveEvent = this.renderer.listen(this.layoutEl, 'mousemove', this.onMouseMove.bind(this));
     this.draggedEventEl.style.marginTop = '0px';
     this.draggedEventLastPos = this.targetEvent.top;
+    let timeout = setTimeout(() => {
+      this.showEventInfo();
+      clearTimeout(timeout);
+    }, 300);
   }
 
   onMouseMove(event: any) {
@@ -265,7 +271,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     posY -= this.draggedEventEl.getBoundingClientRect().height / 2;
     if (this.draggedEventEl) {
       this.draggedEventEl.style.top = `${posY}px`;
-      this.draggedEventEl.scrollIntoView({behavior: 'smooth', block: 'end'});
+      this.draggedEventEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
       posY = Math.round(posY);
       if (posY % EVENT_MIN_HEIGHT == 0) {
         this.draggedEventEl.style.top = `${posY}px`;
@@ -314,5 +320,25 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     if (VIEW_HEIGHT > posY) {
       this.layoutEl?.scrollBy(0, -3);
     }
+  }
+
+  toggleSettings(hour: any) {
+    if (this.draggedEventEl) {
+      return;
+    }
+    this.selectedHour = hour;
+  }
+
+  showEventInfo() {
+    if (this.draggedEventLastPos != this.targetEvent.top) {
+      return;
+    }
+    this.selectedEvent = this.targetEvent;
+    if (this.mouseMoveEvent) {
+      this.mouseMoveEvent();
+      this.mouseMoveEvent = undefined;
+    }
+    this.targetEvent = undefined;
+    this.draggedEventEl = undefined;
   }
 }

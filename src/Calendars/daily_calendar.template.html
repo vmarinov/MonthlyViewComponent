@@ -11,15 +11,21 @@
             currentDate.getFullYear() == shownDate.getFullYear()}">
         {{ selectedDate }}
     </div>
+    <div *ngIf="selectedHour">
+        <calendar-event-settings></calendar-event-settings>
+    </div>
+    <div *ngIf="selectedEvent">
+        <calendar-event-info [event]="selectedEvent"></calendar-event-info>
+    </div>
 </div>
 <div id="daily-calendar-layout">
     <div *ngFor="let hourEvent of hoursAndEvents | keyvalue" class="time" 
-        [attr.hour]="hourEvent.key">
+        [attr.hour]="hourEvent.key"
+        (click)="toggleSettings(hourEvent.key)">
         <span class="hour">
            {{ hourEvent.value.hour }}
         </span>
         <span *ngFor="let event of hourEvent.value.events; let i = index" class="hourly-event"
-            draggable="false"
             [style.width.px]="event.width"
             [style.height.px]="event.elemHeight"
             [style.z-index]="event.zIndex"
