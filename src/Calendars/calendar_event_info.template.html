@@ -1,42 +1,63 @@
 <div id="layout">
     <div class="top-controls">
         <div class="control">
-            <fa-icon [icon]="faPen"></fa-icon>
+            <svg focusable="false" width="20" height="20" viewBox="0 0 24 24">
+                <path
+                    d="M20.41 4.94l-1.35-1.35c-.78-.78-2.05-.78-2.83 0L3 16.82V21h4.18L20.41 7.77c.79-.78.79-2.05 0-2.83zm-14 14.12L5 19v-1.36l9.82-9.82 1.41 1.41-9.82 9.83z">
+                </path>
+            </svg>
         </div>
         <div class="control">
-            <fa-icon [icon]="faTrashCan"></fa-icon>
+            <svg focusable="false" width="20" height="20" viewBox="0 0 24 24">
+                <path d="M15 4V3H9v1H4v2h1v13c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V6h1V4h-5zm2 15H7V6h10v13z"></path>
+                <path d="M9 8h2v9H9zm4 0h2v9h-2z"></path>
+            </svg>
         </div>
         <div class="control">
-            <fa-icon [icon]="faEllipsisVertical"></fa-icon>
+            <svg focusable="false" width="20" height="20" viewBox="0 0 24 24">
+                <path
+                    d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z">
+                </path>
+            </svg>
         </div>
         <div class="control" (click)="closeWindow()">
-            <fa-icon [icon]="faXmark"></fa-icon>
+            <svg focusable="false" width="20" height="20" viewBox="0 0 24 24">
+                <path
+                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z">
+                </path>
+            </svg>
         </div>
     </div>
     <div class="info">
-        <div class="icon" [style.color]="'blue'">
+        <div class="icon" style="color:blue; margin-top: -15px;">
             <fa-icon [icon]="faSquare"></fa-icon>
         </div>
-        <div class="title">
+        <div class="title" style="margin-top: -15px;">
             <div class="event-name">
                 {{ event.name }}
             </div>
             {{ setTitle() }}
         </div>
         <div class="icon">
-            <fa-icon [icon]="faVideo"></fa-icon>
+            <img alt="" aria-hidden="true" class="Oyv6id"
+                src="https://ssl.gstatic.com/calendar/images/conferenceproviders/logo_meet_2020q4_192px.svg" width="20"
+                height="20">
         </div>
         <div class="event-link">
             <div>
                 <a class="event-button" href="#">Join with Google Meet</a>
                 <div class="link-text">placeholder.link/fgewgewg</div>
             </div>
-            <span style="margin-left:auto;margin-right:35px;font-size: 16px;">
+            <span style="margin-left:auto;margin-right:35px;font-size: 16px;cursor: pointer;">
                 <fa-icon [icon]="faClone"></fa-icon>
             </span>
         </div>
         <div class="icon">
-            <fa-icon [icon]="faPhone"></fa-icon>
+            <svg focusable="false" width="20" height="20" viewBox="0 0 24 24" class=" NMm5M">
+                <path
+                    d="M16.01 14.46l-2.62 2.62a16.141 16.141 0 0 1-6.5-6.5l2.62-2.62a.98.98 0 0 0 .27-.9L9.13 3.8c-.09-.46-.5-.8-.98-.8H4c-.56 0-1.03.47-1 1.03a17.92 17.92 0 0 0 2.43 8.01 18.08 18.08 0 0 0 6.5 6.5 17.92 17.92 0 0 0 8.01 2.43c.56.03 1.03-.44 1.03-1v-4.15c0-.48-.34-.89-.8-.98l-3.26-.65a.99.99 0 0 0-.9.27z">
+                </path>
+            </svg>
         </div>
         <div class="by-phone">
             <a href="#">Join by phone</a>
@@ -45,39 +66,84 @@
             </div>
         </div>
         <div class="icon">
-            <fa-icon [icon]="faUserGroup"></fa-icon>
+            <svg focusable="false" width="20" height="20" viewBox="0 0 24 24" class=" NMm5M">
+                <path
+                    d="M15 8c0-1.42-.5-2.73-1.33-3.76.42-.14.86-.24 1.33-.24 2.21 0 4 1.79 4 4s-1.79 4-4 4c-.43 0-.84-.09-1.23-.21-.03-.01-.06-.02-.1-.03A5.98 5.98 0 0 0 15 8zm1.66 5.13C18.03 14.06 19 15.32 19 17v3h4v-3c0-2.18-3.58-3.47-6.34-3.87zM9 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2m0 9c-2.7 0-5.8 1.29-6 2.01V18h12v-1c-.2-.71-3.3-2-6-2M9 4c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm0 9c2.67 0 8 1.34 8 4v3H1v-3c0-2.66 5.33-4 8-4z">
+                </path>
+            </svg>
         </div>
         <div class="guests">
-            (n) Guests
-            <span class="icon" style="margin-left: auto;">
+            {{ event.guests.length }} guests
+            <br>
+            {{ guestsStatus() }}
+            <span class="icon" style="margin-left: auto;cursor: pointer;">
                 <fa-icon [icon]="faClone"></fa-icon>
             </span>
-            <span class="icon">
-                <fa-icon [icon]="faMessage"></fa-icon>
-            </span>
-            <span class="icon">
-                <fa-icon [icon]="faEnvelope"></fa-icon>
+            <span class="icon" style="cursor: pointer;">
+                <svg focusable="false" width="20" height="20" viewBox="0 0 24 24">
+                    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H4V4h16v12z"></path>
+                </svg> </span>
+            <span class="icon" style="cursor: pointer;">
+                <svg focusable="false" width="20" height="20" viewBox="0 0 24 24">
+                    <path
+                        d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-.8 2L12 10.8 4.8 6h14.4zM4 18V7.87l8 5.33 8-5.33V18H4z">
+                    </path>
+                </svg>
             </span>
         </div>
         <div></div>
-        <div class="guest-list">
-            <div>
-               <img 
-                src="https://images.law.com/contrib/content/uploads/sites/403/2018/04/monkey-selfie-Article-201804131946.jpg" 
-                alt="" class="guest-image" />{{ event.calendar }}
+        <div class="guests-list">
+            <div *ngFor="let guest of event.guests" class="guest">
+                <img [src]="guest.image" [alt]="guest.name" class="guest-image" /> {{ guest.name }}
             </div>
         </div>
         <div class="icon">
-            <fa-icon [icon]="faBell"></fa-icon>
+            <svg focusable="false" width="20" height="20" viewBox="0 0 24 24" class=" NMm5M">
+                <path
+                    d="M18 17v-6c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v6H4v2h16v-2h-2zm-2 0H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6zm-4 5c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2z">
+                </path>
+            </svg>
         </div>
         <div class="be-early">
             10 minutes before
         </div>
-        <div class="icon">
+        <div class="icon" style="margin-top: -15px;margin-left: 3px;">
             <fa-icon [icon]="faCalendarDay"></fa-icon>
         </div>
-        <div class="organizer">
+        <div class="organizer" style="margin-top: -15px;">
             {{ event.calendar }}
         </div>
+    </div>
+    <div class="going">
+        <span class="question">Going?</span>
+        <span>
+            <div class="btns btn-yes">
+                <span>Yes</span>
+                <span class="seperator"></span>
+                <span style="line-height: 33px;">
+                    <svg focusable="false" width="16" height="16" viewBox="0 0 24 24">
+                        <path d="M7 10l5 5 5-5H7z"></path>
+                    </svg>
+                </span>
+            </div>
+        </span>
+        <span>
+            <div class="btns btn-no">
+                No
+            </div>
+        </span>
+        <span>
+            <div class="btns btn-maybe">
+                Maybe
+            </div>
+        </span>
+        <span class="seperator"></span>
+        <span>
+            <div class="btns btn-expand">
+                <svg focusable="false" width="20" height="20" viewBox="0 0 24 24" class=" NMm5M">
+                    <path d="M17.29 15.71L12 10.41l-5.29 5.3-1.42-1.42L12 7.59l6.71 6.7z"></path>
+                </svg>
+            </div>
+        </span>
     </div>
 </div>

@@ -93,6 +93,8 @@
     border: 1px solid white;
     text-indent: 10px;
     cursor: pointer;
+    padding-left: 5px;
+    text-align: start;
 }
 
 .event-layout {

@@ -7,7 +7,7 @@
     z-index: 999;
     margin: -60px 45% auto 15%;
     display: flex;
-    width: 448px;
+    width: 428px;
     max-width: 448px;
     min-height: min(547px, var(--min-height));
     flex-direction: column;
@@ -16,6 +16,7 @@
     border-radius: 8px;
     border: 1px solid rgb(211, 211, 211, .4);
     overflow-y: auto;
+    box-shadow: 0px 0px 3px 2px rgb(211, 211, 211, .4);
 }
 
 .top-controls {
@@ -40,6 +41,7 @@
     line-height: 32px;
     text-align: center;
     color: grey;
+    cursor: pointer;
 }
 
 .control:hover {
@@ -55,7 +57,7 @@
     display: grid;
     width: 100%;
     grid-template-columns: 50px 1fr;
-    gap: 25px 10px;
+    gap: 20px 10px;
 }
 
 .icon {
@@ -98,7 +100,7 @@
     text-decoration: none;
     width: 183.45px;
     min-height: 36px;
-    font-family: Roboto,Arial,sans-serif;
+    font-family: Roboto, Arial, sans-serif;
     font-size: 16px;
     font-weight: 400;
     letter-spacing: .2px;
@@ -109,9 +111,13 @@
     border-radius: 8px;
 }
 
+.event-button:hover {
+    opacity: 0.8;
+}
+
 .link-text {
     margin-top: 5px;
-    font-family: Roboto,Arial,sans-serif;
+    font-family: Roboto, Arial, sans-serif;
     font-size: 12px;
     font-weight: 400;
     letter-spacing: .3px;
@@ -124,20 +130,21 @@
     height: 20px;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-family: Roboto,Arial,sans-serif;
+    font-family: Roboto, Arial, sans-serif;
     font-size: 14px;
-    font-weight: 400;
+    font-weight: 600;
     letter-spacing: .2px;
 }
 
 .phone {
-    font-family: Roboto,Arial,sans-serif;
+    font-family: Roboto, Arial, sans-serif;
     font-size: 12px;
+    font-weight: 400;
     color: #3c4043;
 }
 
 .guests {
-    font-family: Roboto,Arial,sans-serif;
+    font-family: Roboto, Arial, sans-serif;
     display: flex;
     flex-flow: row nowrap;
     font-size: 14px;
@@ -164,4 +171,119 @@
     width: 24px;
     height: 24px;
     border-radius: 50%;
+    margin-right: 15px;
+}
+
+.guest-image::after {
+    content: 'brbrb';
+    position: absolute;
+    height: 10px;
+    width: 10px;
+}
+
+.guests-list {
+    margin-top: -20px;
+}
+
+.guest {
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: .2px;
+    line-height: 20px;
+    color: #3c4043;
+    margin-top: 10px;
+}
+
+.be-early {
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: .2px;
+    line-height: 20px;
+    color: #3c4043;
+}
+
+.going {
+    height: 48px;
+    min-height: 48px;
+    align-items: center;
+    border-top: #dadce0 1px solid;
+    display: flex;
+    flex: none;
+    justify-content: flex-end;
+    padding-left: 16px;
+    padding-right: 16px;
+    column-gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-yes {
+    width: 75px;
+    height: 28px;
+    border: 1px solid rgb(211, 211, 211, .4);
+    border-radius: 25px;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-around;
+    padding-left: 2px;
+    padding-right: 2px;
+    font-family: "Google Sans", Roboto, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .25px;
+    line-height: 26px;
+    cursor: pointer;
+}
+
+.btn-no {
+    width: 46px;
+    height: 26px;
+    border-radius: 35px;
+    background: transparent;
+    border: 1px solid rgb(211, 211, 211, .4);
+    text-align: center;
+    font-family: 'Google Sans', Arial, sans-serif;
+    font-weight: 550;
+    font-size: 12px;
+    line-height: 26px;
+    letter-spacing: .3px;
+    cursor: pointer;
+}
+
+.btn-maybe {
+    width: 64px;
+    height: 28px;
+    border-radius: 35px;
+    border: 1px solid rgb(211, 211, 211, .4);
+    text-align: center;
+    font-family: 'Google Sans', Arial, sans-serif;
+    font-weight: 550;
+    font-size: 12px;
+    line-height: 26px;
+    letter-spacing: .3px;
+    cursor: pointer;
+}
+
+.btn-expand {
+    cursor: pointer;
+}
+
+.btns:hover {
+    background-color:  rgb(211, 211, 211, .4);
+    outline: none;
+}
+
+.seperator {
+    height: 28px;
+    border-left: 1px solid rgb(211, 211, 211, .4);
+}
+
+.question {
+    margin-right: auto;
+    font-family: 'Google Sans', Arial, sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 26px;
+    letter-spacing: .3px;
 }

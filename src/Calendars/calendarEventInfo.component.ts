@@ -1,5 +1,5 @@
 import { Component, Inject, Input, Output, EventEmitter } from "@angular/core";
-import { faXmark, faPen, faTrashCan, faEllipsisVertical, faSquare, faVideo, faClone, faPhone, faUserGroup, faMessage, faEnvelope, faBell, faCalendarDay } from "@fortawesome/free-solid-svg-icons";
+import { faSquare, faClone, faCalendarDay } from "@fortawesome/free-solid-svg-icons";
 
 const WEEK_DAYS: string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -10,23 +10,13 @@ const WEEK_DAYS: string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursd
 })
 export class CallendarEventInfo {
     @Input('event') event: any;
-    @Output() eventChange: EventEmitter<any> = new EventEmitter<any>()
+    @Output() eventChange: EventEmitter<any> = new EventEmitter<any>();
 
-    faXmark = faXmark;
-    faPen = faPen;
-    faTrashCan = faTrashCan;
-    faEllipsisVertical = faEllipsisVertical;
     faSquare = faSquare;
-    faVideo = faVideo;
     faClone = faClone;
-    faPhone = faPhone;
-    faUserGroup = faUserGroup;
-    faMessage = faMessage;
-    faEnvelope = faEnvelope;
-    faBell = faBell;
     faCalendarDay = faCalendarDay;
 
-    constructor(@Inject('monthNames') public monthNames: any) {}
+    constructor(@Inject('monthNames') public monthNames: any) { }
 
     setTitle() {
         let weekDay = WEEK_DAYS[this.event.date.getDay()];
@@ -40,5 +30,32 @@ export class CallendarEventInfo {
     closeWindow() {
         this.event = undefined;
         this.eventChange.emit();
+    }
+
+    guestsStatus() {
+        if (this.event.guests.length == 0) {
+            return '';
+        }
+        let yesCount = 0;
+        let noCount = 0;
+        let awaitingCount = 0;
+        for (let guest of this.event.guests) {
+            switch (guest.status) {
+                case 'yes':
+                    yesCount++;
+                    break;
+                case 'no':
+                    noCount++;
+                    break;
+                default:
+                    awaitingCount++;
+                    break;
+            }
+        }
+        let text = `${yesCount} yes`;
+        text += noCount > 0 ? `, ${noCount} no` : '';
+        text += awaitingCount > 0 ? `, ${awaitingCount} awaiting` : '';
+
+        return text;
     }
 }
