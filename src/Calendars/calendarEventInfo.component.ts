@@ -1,5 +1,5 @@
-import { Component, Inject, Input } from "@angular/core";
-import { faXmark, faPen, faTrashCan, faEllipsisVertical, faSquare, faVideo, faClone } from "@fortawesome/free-solid-svg-icons";
+import { Component, Inject, Input, Output, EventEmitter } from "@angular/core";
+import { faXmark, faPen, faTrashCan, faEllipsisVertical, faSquare, faVideo, faClone, faPhone, faUserGroup, faMessage, faEnvelope, faBell, faCalendarDay } from "@fortawesome/free-solid-svg-icons";
 
 const WEEK_DAYS: string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -10,6 +10,7 @@ const WEEK_DAYS: string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursd
 })
 export class CallendarEventInfo {
     @Input('event') event: any;
+    @Output() eventChange: EventEmitter<any> = new EventEmitter<any>()
 
     faXmark = faXmark;
     faPen = faPen;
@@ -18,6 +19,12 @@ export class CallendarEventInfo {
     faSquare = faSquare;
     faVideo = faVideo;
     faClone = faClone;
+    faPhone = faPhone;
+    faUserGroup = faUserGroup;
+    faMessage = faMessage;
+    faEnvelope = faEnvelope;
+    faBell = faBell;
+    faCalendarDay = faCalendarDay;
 
     constructor(@Inject('monthNames') public monthNames: any) {}
 
@@ -28,5 +35,10 @@ export class CallendarEventInfo {
         let title = `${weekDay}, ${month} ${date} - ${this.event.duration}`;
 
         return title;
+    }
+
+    closeWindow() {
+        this.event = undefined;
+        this.eventChange.emit();
     }
 }

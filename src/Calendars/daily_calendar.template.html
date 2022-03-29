@@ -12,10 +12,10 @@
         {{ selectedDate }}
     </div>
     <div *ngIf="selectedHour">
-        <calendar-event-settings></calendar-event-settings>
+        <calendar-event-settings [(selectedHour)]="selectedHour"></calendar-event-settings>
     </div>
     <div *ngIf="selectedEvent">
-        <calendar-event-info [event]="selectedEvent"></calendar-event-info>
+        <calendar-event-info [(event)]="selectedEvent"></calendar-event-info>
     </div>
 </div>
 <div id="daily-calendar-layout">

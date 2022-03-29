@@ -9,7 +9,7 @@
         <div class="control">
             <fa-icon [icon]="faEllipsisVertical"></fa-icon>
         </div>
-        <div class="control">
+        <div class="control" (click)="closeWindow()">
             <fa-icon [icon]="faXmark"></fa-icon>
         </div>
     </div>
@@ -27,9 +27,57 @@
             <fa-icon [icon]="faVideo"></fa-icon>
         </div>
         <div class="event-link">
-            <a class="event-button" href="#">Join with Google Meet</a>
-            <span style="display:inline-block;margin-left:100px;margin-right:15px;font-size: 16px;"><fa-icon [icon]="faClone"></fa-icon></span>
-            <div class="link-text">placeholder.link/fgewgewg</div>
+            <div>
+                <a class="event-button" href="#">Join with Google Meet</a>
+                <div class="link-text">placeholder.link/fgewgewg</div>
+            </div>
+            <span style="margin-left:auto;margin-right:35px;font-size: 16px;">
+                <fa-icon [icon]="faClone"></fa-icon>
+            </span>
+        </div>
+        <div class="icon">
+            <fa-icon [icon]="faPhone"></fa-icon>
+        </div>
+        <div class="by-phone">
+            <a href="#">Join by phone</a>
+            <div class="phone">
+                (US) +1 917-336-7348 PIN: 553 393 702#
+            </div>
+        </div>
+        <div class="icon">
+            <fa-icon [icon]="faUserGroup"></fa-icon>
+        </div>
+        <div class="guests">
+            (n) Guests
+            <span class="icon" style="margin-left: auto;">
+                <fa-icon [icon]="faClone"></fa-icon>
+            </span>
+            <span class="icon">
+                <fa-icon [icon]="faMessage"></fa-icon>
+            </span>
+            <span class="icon">
+                <fa-icon [icon]="faEnvelope"></fa-icon>
+            </span>
+        </div>
+        <div></div>
+        <div class="guest-list">
+            <div>
+               <img 
+                src="https://images.law.com/contrib/content/uploads/sites/403/2018/04/monkey-selfie-Article-201804131946.jpg" 
+                alt="" class="guest-image" />{{ event.calendar }}
+            </div>
+        </div>
+        <div class="icon">
+            <fa-icon [icon]="faBell"></fa-icon>
+        </div>
+        <div class="be-early">
+            10 minutes before
+        </div>
+        <div class="icon">
+            <fa-icon [icon]="faCalendarDay"></fa-icon>
+        </div>
+        <div class="organizer">
+            {{ event.calendar }}
         </div>
     </div>
 </div>

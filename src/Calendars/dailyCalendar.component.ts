@@ -263,7 +263,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     let timeout = setTimeout(() => {
       this.showEventInfo();
       clearTimeout(timeout);
-    }, 300);
+    }, 500);
   }
 
   onMouseMove(event: any) {
@@ -271,7 +271,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     posY -= this.draggedEventEl.getBoundingClientRect().height / 2;
     if (this.draggedEventEl) {
       this.draggedEventEl.style.top = `${posY}px`;
-      this.draggedEventEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      // this.draggedEventEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
       posY = Math.round(posY);
       if (posY % EVENT_MIN_HEIGHT == 0) {
         this.draggedEventEl.style.top = `${posY}px`;
@@ -334,6 +334,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
       return;
     }
     this.selectedEvent = this.targetEvent;
+    this.setDraggedElProperties();
     if (this.mouseMoveEvent) {
       this.mouseMoveEvent();
       this.mouseMoveEvent = undefined;
