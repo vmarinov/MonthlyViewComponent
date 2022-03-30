@@ -35,21 +35,18 @@ export class CalendarEventsService {
     },
     {
       name: 'Beer', starts: '12:00', ends: '14:00', calendar: 'emilia', date: new Date(2022, 3, 2), 
-      guests: [ //user service that holds info for user, in these objects we will hold only userId and status/going
+      guests: [
         {
-          name: 'John McClane',
-          status: 'yes',
-          image: 'https://upload.wikimedia.org/wikipedia/en/5/54/John_MacClane.jpg'
+          userId: 1,
+          going: true,
         },
         {
-          name: 'Walter White',
-          status: 'yes',
-          image: 'https://upload.wikimedia.org/wikipedia/en/thumb/0/03/Walter_White_S5B.png/220px-Walter_White_S5B.png'
+          userId: 2,
+          going: true,
         },
         {
-          name: 'Barbra Streisand',
-          status: 'no',
-          image: 'https://s3.amazonaws.com/cms.ipressroom.com/173/files/20219/61672a242cfac272344116ae_Barbra+Streisand/Barbra+Streisand_3380e497-e1c2-44b0-aa2e-a7eaf2b7d805-prv.jpg'
+          userId: 3,
+          going: false,
         }
       ]
     },
