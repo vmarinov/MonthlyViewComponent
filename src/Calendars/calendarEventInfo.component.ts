@@ -1,5 +1,5 @@
 import { Component, Inject, Input, Output, EventEmitter, OnInit, OnDestroy } from "@angular/core";
-import { faSquare, faClone, faCalendarDay } from "@fortawesome/free-solid-svg-icons";
+import { faSquare, faClone, faCalendarDay, faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { UsersService } from "src/Services/usersService.class";
 
 const WEEK_DAYS: string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -14,10 +14,13 @@ export class CallendarEventInfo implements OnInit, OnDestroy{
     @Output() eventChange: EventEmitter<any> = new EventEmitter<any>();
 
     guests!: any[];
+    showNotes: boolean = false;
 
     faSquare = faSquare;
     faClone = faClone;
     faCalendarDay = faCalendarDay;
+    faAngleDown = faAngleDown;
+    faAngleUp = faAngleUp;
 
     constructor(@Inject('monthNames') public monthNames: any, private usersService: UsersService) { }
 

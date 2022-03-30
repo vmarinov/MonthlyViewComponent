@@ -122,7 +122,7 @@
             {{ event.calendar }}
         </div>
     </div>
-    <div class="going">
+    <div class="going" [style.top.px]="showNotes ? -44 : 0">
         <span class="question">Going?</span>
         <span>
             <div class="btns btn-yes">
@@ -147,11 +147,26 @@
         </span>
         <span class="seperator"></span>
         <span>
-            <div class="btns btn-expand">
-                <svg focusable="false" width="20" height="20" viewBox="0 0 24 24" class=" NMm5M">
-                    <path d="M17.29 15.71L12 10.41l-5.29 5.3-1.42-1.42L12 7.59l6.71 6.7z"></path>
-                </svg>
+            <div class="btn-expand" (click)="showNotes = !showNotes">
+                <div *ngIf="!showNotes; else close">
+                    <fa-icon [icon]="faAngleUp"></fa-icon>
+                </div>
+                <ng-template #close>
+                    <fa-icon [icon]="faAngleDown"></fa-icon>
+                </ng-template>
             </div>
         </span>
+        <div class="notes" *ngIf="showNotes">
+            <span>
+                <div class="btns btn-propose">
+                    Propose a new time
+                </div>
+            </span>
+            <span>
+                <div class="btns btn-note">
+                   Add note
+                </div>
+            </span>
+        </div>
     </div>
 </div>

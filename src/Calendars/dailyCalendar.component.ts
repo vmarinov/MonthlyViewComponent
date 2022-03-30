@@ -360,6 +360,14 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
       this.mouseMoveEvent();
       this.mouseMoveEvent = undefined;
     }
+    this.draggedEventEl.style.boxShadow = '0px 0px 10px 2px black';
+    this.draggedEventEl.style.border = 'none';
+    this.draggedEventEl.style.zIndex = 899;
+  }
+
+  hideEventInfo() {
+    this.setDraggedElProperties();
+    this.selectedEvent = undefined;
     this.targetEvent = undefined;
     this.draggedEventEl = undefined;
   }

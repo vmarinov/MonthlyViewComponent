@@ -100,9 +100,9 @@
     text-decoration: none;
     width: 183.45px;
     min-height: 36px;
-    font-family: Google Sans,Roboto,Arial,sans-serif;
+    font-family: Google Sans, Roboto, Arial, sans-serif;
     font-size: 14px;
-    font-weight: 500;    
+    font-weight: 500;
     letter-spacing: .2px;
     line-height: 20px;
     color: #ffffff;
@@ -216,21 +216,26 @@
 .going {
     height: 48px;
     min-height: 48px;
+    position: relative;
+    background: white;
     align-items: center;
     border-top: #dadce0 1px solid;
     display: flex;
     flex: none;
     justify-content: flex-end;
+    align-items: stretch;
+    flex-flow: row wrap;
     padding-left: 16px;
+    padding-top: 8px;
     padding-right: 16px;
     column-gap: 10px;
     margin-top: 20px;
+    transition: top 200ms ease-in;
 }
 
 .btn-yes {
     width: 75px;
     height: 28px;
-    border: 1px solid rgb(211, 211, 211, .4);
     border-radius: 25px;
     display: flex;
     flex-flow: row;
@@ -242,7 +247,6 @@
     font-weight: 500;
     letter-spacing: .25px;
     line-height: 26px;
-    cursor: pointer;
 }
 
 .btn-no {
@@ -250,31 +254,43 @@
     height: 26px;
     border-radius: 35px;
     background: transparent;
-    border: 1px solid rgb(211, 211, 211, .4);
     text-align: center;
     font-family: 'Google Sans', Arial, sans-serif;
     font-weight: 550;
     font-size: 12px;
     line-height: 26px;
     letter-spacing: .3px;
-    cursor: pointer;
 }
 
 .btn-maybe {
     width: 64px;
     height: 28px;
     border-radius: 35px;
-    border: 1px solid rgb(211, 211, 211, .4);
     text-align: center;
     font-family: 'Google Sans', Arial, sans-serif;
     font-weight: 550;
     font-size: 12px;
     line-height: 26px;
     letter-spacing: .3px;
-    cursor: pointer;
 }
 
 .btn-expand {
+    width: 20px;
+    height: 20px;
+    border: none;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 35px;
+    margin-top: 4px;
+}
+
+.btn-expand:hover {
+    background-color: rgb(211, 211, 211, .4);
+    outline: none;
+}
+
+.btns {
+    border: 1px solid rgb(211, 211, 211, .4);
     cursor: pointer;
 }
 
@@ -295,4 +311,51 @@
     font-size: 14px;
     line-height: 26px;
     letter-spacing: .3px;
+}
+
+.notes {
+    align-items: center;
+    border-top: #dadce0 1px solid;
+    display: flex;
+    flex: none;
+    width: 120%;
+    min-height: 48px;
+    margin-top: 10px;
+    justify-content: flex-end;
+    column-gap: 10px;
+    padding-left: 16px;
+    padding-right: 10px;
+    margin-right: -16px;
+}
+
+.btn-propose {
+    width: 140px;
+    height: 26px;
+    border-radius: 36px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: auto;
+    font-size: 12px;
+    font-family: 'Google Sans', Arial, sans-serif;
+    font-weight: 550;
+    letter-spacing: .3px;
+    text-transform: none;
+    text-align: left;
+    line-height: 26px;
+    text-align: center;
+}
+
+.btn-note {
+    width: 77.5px;
+    height: 26px;
+    border-radius: 35px;
+    line-height: 26px;
+    font-family: 'Google Sans', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .3px;
+    text-transform: none;
+    text-align: center;
+    color: #3c4043;
 }
