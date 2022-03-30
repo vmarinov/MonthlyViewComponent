@@ -20,7 +20,7 @@ export class CallendarEventInfo {
 
     setTitle() {
         let weekDay = WEEK_DAYS[this.event.date.getDay()];
-        let month = this.monthNames[this.event.date.getMonth()];
+        let month = this.monthNames[this.event.date.getMonth() - 1];
         let date = this.event.date.getDate();
         let title = `${weekDay}, ${month} ${date} - ${this.event.duration}`;
 

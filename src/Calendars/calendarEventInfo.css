@@ -100,9 +100,9 @@
     text-decoration: none;
     width: 183.45px;
     min-height: 36px;
-    font-family: Roboto, Arial, sans-serif;
-    font-size: 16px;
-    font-weight: 400;
+    font-family: Google Sans,Roboto,Arial,sans-serif;
+    font-size: 14px;
+    font-weight: 500;    
     letter-spacing: .2px;
     line-height: 20px;
     color: #ffffff;
@@ -154,12 +154,12 @@
     color: #3c4043;
 }
 
-.guests span:first-of-type {
+.guests span:nth-of-type(2) {
     visibility: hidden;
     margin-left: 100px;
 }
 
-.guests:hover span:first-of-type {
+.guests:hover span:nth-of-type(2) {
     visibility: visible;
 }
 
@@ -186,7 +186,7 @@
 }
 
 .guest {
-    font-family: Roboto, Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif;
     font-size: 14px;
     font-weight: 400;
     letter-spacing: .2px;
@@ -195,8 +195,17 @@
     margin-top: 10px;
 }
 
+.attendance {
+    font-family: 'Roboto', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: .3px;
+    line-height: 16px;
+    color: #5f6368;
+}
+
 .be-early {
-    font-family: Roboto, Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif;
     font-size: 14px;
     font-weight: 400;
     letter-spacing: .2px;
@@ -228,7 +237,7 @@
     justify-content: space-around;
     padding-left: 2px;
     padding-right: 2px;
-    font-family: "Google Sans", Roboto, Arial, sans-serif;
+    font-family: "Google Sans", 'Roboto', Arial, sans-serif;
     font-size: 12px;
     font-weight: 500;
     letter-spacing: .25px;
@@ -270,7 +279,7 @@
 }
 
 .btns:hover {
-    background-color:  rgb(211, 211, 211, .4);
+    background-color: rgb(211, 211, 211, .4);
     outline: none;
 }
 

@@ -45,7 +45,9 @@
         </div>
         <div class="event-link">
             <div>
-                <a class="event-button" href="#">Join with Google Meet</a>
+                <div class="event-button">
+                    <a href="#" style="text-decoration: none;color: white">Join with Google Meet</a>
+                </div>
                 <div class="link-text">placeholder.link/fgewgewg</div>
             </div>
             <span style="margin-left:auto;margin-right:35px;font-size: 16px;cursor: pointer;">
@@ -73,9 +75,15 @@
             </svg>
         </div>
         <div class="guests">
-            {{ event.guests.length }} guests
-            <br>
-            {{ guestsStatus() }}
+            <span>
+                <div>
+                    {{ event.guests.length }} guests
+                </div>
+                <div class="attendance">
+                    {{ guestsStatus() }}
+                </div>
+            </span>
+
             <span class="icon" style="margin-left: auto;cursor: pointer;">
                 <fa-icon [icon]="faClone"></fa-icon>
             </span>

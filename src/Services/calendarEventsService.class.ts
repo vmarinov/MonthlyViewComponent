@@ -35,7 +35,7 @@ export class CalendarEventsService {
     },
     {
       name: 'Beer', starts: '12:00', ends: '14:00', calendar: 'emilia', date: new Date(2022, 3, 2), 
-      guests: [
+      guests: [ //user service that holds info for user, in these objects we will hold only userId and status/going
         {
           name: 'John McClane',
           status: 'yes',
