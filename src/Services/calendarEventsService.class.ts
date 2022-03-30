@@ -70,6 +70,10 @@ export class CalendarEventsService {
     },
     {
       name: 'Shortest', starts: '19:00', ends: '20:00', calendar: 'emilia', date: new Date(2022, 3, 2), guests: []
+    }
+    ,
+    {
+      name: 'Got 30 minutes', starts: '16:00', ends: '16:30', calendar: 'emilia', date: new Date(2022, 3, 2), guests: []
     }];
 
   eventsSource = new BehaviorSubject<any>(null);

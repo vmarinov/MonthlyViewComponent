@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faCalendarDay } from "@fortawesome/free-solid-svg-icons";
 
 @Component({
     selector: 'calendar-event-settings',
@@ -9,7 +9,8 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 export class CalendarEventSettings {
     @Input() selectedHour: any;
     @Output() selectedHourChange: EventEmitter<any> = new EventEmitter<any>();
-    faXmark = faXmark;
+
+    faCalendarDay = faCalendarDay;
 
     closeWindow() {
         this.selectedHour = undefined;

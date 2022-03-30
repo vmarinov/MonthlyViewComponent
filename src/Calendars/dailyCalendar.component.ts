@@ -268,7 +268,11 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     event.stopImmediatePropagation();
     this.targetEvent = calendarEvent;
     this.targetEvent.prevStartHour = this.targetEvent.startHour;
-    this.draggedEventEl = event.target;
+    let target = event.target;
+    while(target.className != 'hourly-event') {
+      target = event.target.parentElement;
+    }
+    this.draggedEventEl = target;
     this.draggedEventLastPos = this.targetEvent.top;
     this.mouseMoveEvent = this.renderer.listen(this.layoutEl, 'mousemove', this.onMouseMove.bind(this));
     let timeout = setTimeout(() => {
