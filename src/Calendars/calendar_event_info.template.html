@@ -101,7 +101,7 @@
         </div>
         <div></div>
         <div class="guests-list">
-            <div *ngFor="let guest of event.guests" class="guest">
+            <div *ngFor="let guest of guests" class="guest">
                 <img [src]="guest.image" [alt]="guest.name" class="guest-image" /> {{ guest.name }}
             </div>
         </div>

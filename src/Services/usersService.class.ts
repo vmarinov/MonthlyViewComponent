@@ -28,6 +28,6 @@ export class UsersService {
     }
 
     getUsers(ids: any[]) {
-        return this.users.filter((user: any) => ids.includes(user.id));
+        return this.users.filter((user: any) => ids.includes(user.userId));
     }
 }
