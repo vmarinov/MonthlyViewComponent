@@ -102,7 +102,20 @@
         <div></div>
         <div class="guests-list">
             <div *ngFor="let guest of guests" class="guest">
-                <img [src]="guest.image" [alt]="guest.name" class="guest-image" /> {{ guest.name }}
+                <span style="position: relative;top: 0; left: 0;">
+                    <img [src]="guest.image" [alt]="guest.name" class="guest-image" [name]="guest.name" />
+                    <label [for]="guest.name" [ngSwitch]="guest.going" class="check">
+                        <svg *ngSwitchCase="true" xmlns="https://www.w3.org/2000/svg" width="14" height="14">
+                            <path fill="#CEEAD6" d="M7 0c3.87 0 7 3.13 7 7s-3.13 7-7 7-7-3.13-7-7 3.13-7 7-7z"></path>
+                            <path fill="none" stroke="#137333" stroke-width="1.5" d="M3.5 6.5L6 9l5-5"></path>
+                        </svg>
+                        <svg *ngSwitchCase="false" xmlns="https://www.w3.org/2000/svg" width="14" height="14">
+                            <path fill="#FAD2CF" d="M7 0c3.87 0 7 3.13 7 7s-3.13 7-7 7-7-3.13-7-7 3.13-7 7-7z"></path>
+                            <path fill="none" stroke="#B31412" stroke-width="1.5" d="M4 10l6-6M10 10L4 4"></path>
+                        </svg>
+                    </label>
+                </span>
+                {{ guest.name }}
             </div>
         </div>
         <div class="icon">

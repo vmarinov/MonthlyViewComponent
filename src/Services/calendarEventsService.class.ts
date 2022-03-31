@@ -34,7 +34,7 @@ export class CalendarEventsService {
       name: 'Coffee', starts: '10:00', ends: '11:00', calendar: 'emilia', date: new Date(2022, 3, 2), guests: []
     },
     {
-      name: 'Beer', starts: '12:00', ends: '14:00', calendar: 'emilia', date: new Date(2022, 3, 2), 
+      name: 'Beer', starts: '12:00', ends: '14:00', calendar: 'emilia', date: new Date(2022, 3, 2),
       guests: [
         {
           userId: 1,
@@ -47,6 +47,10 @@ export class CalendarEventsService {
         {
           userId: 3,
           going: false,
+        },
+        {
+          userId: 4,
+          going: undefined
         }
       ]
     },

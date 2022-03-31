@@ -15,7 +15,7 @@ const WEEK_DAYS: string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursd
     templateUrl: 'calendar_event_info.template.html',
     styleUrls: ['calendarEventInfo.css']
 })
-export class CallendarEventInfo implements OnInit, OnDestroy{
+export class CallendarEventInfo implements OnInit, OnDestroy {
     @Input('event') event: any;
     @Output() eventChange: EventEmitter<any> = new EventEmitter<any>();
 
@@ -86,5 +86,19 @@ export class CallendarEventInfo implements OnInit, OnDestroy{
         }
         let guestIds = this.event.guests.map((guest: any) => guest.userId);
         this.guests = this.usersService.getUsers(guestIds);
+        for (let guest of this.guests) {
+            if (!guest.image && !guest.name) {
+                guest.image = 'https://lh3.googleusercontent.com/a/default-user=s24-c';
+                guest.name = guest.email;
+            }
+
+            if (!guest.image) {
+                guest.image = `https://ui-avatars.com/api/?name=${guest.name.charAt(0)}&font-size=0.75`;
+            }
+            guest.going = this.event.guests.find((eventG: any) => eventG.userId == guest.userId).going;
+        }
+        // this.event.guests.map((guest: any) => {
+        //     Object.assign(guest, { info: this.usersService.getUser(guest.userId) })
+        // });
     }
 }
