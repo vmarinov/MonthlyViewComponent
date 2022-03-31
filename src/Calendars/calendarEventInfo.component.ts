@@ -3,7 +3,13 @@ import { faSquare, faClone, faCalendarDay, faAngleDown, faAngleUp } from "@forta
 import { UsersService } from "src/Services/usersService.class";
 
 const WEEK_DAYS: string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
+//TODO
+//Fix scrollbar in event info dialog to be only for the middle area, top controls and bottom should be independent of the layout
+// prevent scrolling of daily view while info dialog is open
+//Add dialogs for event notes next to yes button
+//Check mark next to avatar
+//On hover over guests show small dialog with info 
+//If guests does not have an icon and his name is known show a capital letter avatar, if his name is unknow use default user avatar and write his email
 @Component({
     selector: 'calendar-event-info',
     templateUrl: 'calendar_event_info.template.html',

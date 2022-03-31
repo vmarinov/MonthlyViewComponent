@@ -27,6 +27,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
   groupedEvents: any;
   mouseMoveEvent: any;
   draggedEventEl: any;
+  durationEl: any;
   draggedEventLastPos: any;
   targetEvent: any;
   layoutEl!: HTMLElement;
@@ -88,9 +89,14 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
 
     let endTime = `${endHour % 12 == 0 ?
       `12${endMinutes != 0 ? `:${endMinutes}` : ''}` :
-      `${endHour % 12}${endMinutes != 0 ? `:${endMinutes}` : ''}`}${endHour < 11 ? 'am' : 'pm'}`;
+      `${endHour % 12}${endMinutes != 0 ? `:${endMinutes}` : ''}`}${endHour <= 11 ? 'am' : 'pm'}`;
 
-    let durationTxt = startTime + ' - ' + endTime;
+    let durationTxt;
+    if (startHour == endHour && endMinutes - startMinutes <= 30) {
+      durationTxt = startTime + `${startHour <= 11 ? 'am' : 'pm'}`;
+    } else {
+      durationTxt = startTime + ' - ' + endTime;
+    }
 
     return <any>[startHour, endHour, startMinutes, endMinutes, durationTxt];
   }
@@ -152,7 +158,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
       })
   }
 
-  upadeEventProperties(posTop: any) {
+  updateEventProperties(posTop: any) {
     this.draggedEventEl.style.top = `${posTop}px`;
     let min = ((posTop - this.draggedEventLastPos) / EVENT_MIN_HEIGHT) * 15;
     this.targetEvent.startInMin += min;
@@ -160,7 +166,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     this.targetEvent.starts = this.parseTime(this.targetEvent.startInMin);
     this.targetEvent.ends = this.parseTime(this.targetEvent.endInMin);
     this.setEventProperties(this.targetEvent);
-    this.draggedEventEl.innerText = `   ${this.targetEvent.name}\n ${this.targetEvent.duration}`;
+    this.durationEl.innerText = this.targetEvent.duration;
     this.draggedEventLastPos = posTop;
   }
 
@@ -174,8 +180,8 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
   }
   // event positioning fn
   // when events have same start hour the shorter event should always have higher z-index and they are shown in longest -> shortest order
-  // events that start 1 hour later should have margin left in order for the previous event to show
-  // try to put events in groups depending on duration overlaps and then determine z-index and margins
+  // events that start later should have margin left in order for the previous event to show
+  // determine z-index and margins
   setEventsPositions() {
     this.changeRef.markForCheck();
     for (let group of this.groupedEvents) {
@@ -204,7 +210,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     let groupedEvents = [];
     let currGroup = { start: sortedEvents[0].startHour, end: sortedEvents[0].endHour, events: [sortedEvents[0]] };
     groupedEvents.push(currGroup);
-    // TODO use short for
+    
     for (let i = 1; i < sortedEvents.length - 1; i++) {
       let event = sortedEvents[i];
       if (event.startHour < currGroup.end) {
@@ -268,17 +274,15 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     event.stopImmediatePropagation();
     this.targetEvent = calendarEvent;
     this.targetEvent.prevStartHour = this.targetEvent.startHour;
-    let target = event.target;
-    while(target.className != 'hourly-event') {
-      target = event.target.parentElement;
-    }
+    let target = event.target.closest('.hourly-event');
     this.draggedEventEl = target;
+    this.durationEl = this.draggedEventEl.querySelector('.event-duration');
     this.draggedEventLastPos = this.targetEvent.top;
     this.mouseMoveEvent = this.renderer.listen(this.layoutEl, 'mousemove', this.onMouseMove.bind(this));
     let timeout = setTimeout(() => {
       this.showEventInfo();
       clearTimeout(timeout);
-    }, 100);
+    }, 200);
   }
 
   onMouseMove(event: any) {
@@ -290,7 +294,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
       // this.draggedEventEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
       posY = Math.round(posY);
       if (posY % EVENT_MIN_HEIGHT == 0) {
-        this.upadeEventProperties(posY);
+        this.updateEventProperties(posY);
       }
     }
 
@@ -307,6 +311,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     this.changeEventGroup(this.targetEvent);
     this.setDraggedElProperties();
     this.draggedEventEl = undefined;
+    this.durationEl = undefined;
     this.mouseMoveEvent();
     this.mouseMoveEvent = undefined;
     this.dragStart = false;
@@ -314,7 +319,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
   }
 
   initDrag() {
-    this.draggedEventEl.style.boxShadow = '0px 0px 10px 2px black';
+    this.draggedEventEl.style.boxShadow = '0px 6px 10px 0px rgb(0 0 0 / 14%), 0px 1px 18px 0px rgb(0 0 0 / 12%), 0px 3px 5px -1px rgb(0 0 0 / 20%)';
     this.draggedEventEl.style.border = 'none';
     this.draggedEventEl.style.zIndex = 999;
     this.draggedEventEl.style.cursor = 'move';
@@ -332,7 +337,6 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     this.draggedEventEl.style.zIndex = this.targetEvent.zIndex;
     this.draggedEventEl.style.top = `${this.targetEvent.top}px`;
     this.draggedEventEl.style.width = `${this.targetEvent.width}px`;
-    this.draggedEventEl.innerText = `${this.targetEvent.name}\n ${this.targetEvent.duration}`;
   }
 
   scrollView(posY: any) {
@@ -364,8 +368,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
       this.mouseMoveEvent();
       this.mouseMoveEvent = undefined;
     }
-    this.draggedEventEl.style.boxShadow = '0px 0px 10px 2px black';
-    this.draggedEventEl.style.border = 'none';
+    this.draggedEventEl.style.boxShadow = '0px 6px 10px 0px rgb(0 0 0 / 14%), 0px 1px 18px 0px rgb(0 0 0 / 12%), 0px 3px 5px -1px rgb(0 0 0 / 20%)';
     this.draggedEventEl.style.zIndex = 899;
   }
 
