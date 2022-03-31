@@ -122,7 +122,7 @@
             {{ event.calendar }}
         </div>
     </div>
-    <div class="going" [style.top.px]="showNotes ? -44 : 0">
+    <div class="going" [style.top.px]="showNotes ? -44 : 0" [style.height.px]="showNotes ? 52 : 48">
         <span class="question">Going?</span>
         <span>
             <div class="btns btn-yes">
@@ -156,7 +156,7 @@
                 </ng-template>
             </div>
         </span>
-        <div class="notes" *ngIf="showNotes">
+        <div [style.height.px]="showNotes ? 48 : 0" [ngClass]="{'notes-hidden': !showNotes, 'notes': true}">
             <span>
                 <div class="btns btn-propose">
                     Propose a new time
@@ -164,7 +164,7 @@
             </span>
             <span>
                 <div class="btns btn-note">
-                   Add note
+                    Add note
                 </div>
             </span>
         </div>

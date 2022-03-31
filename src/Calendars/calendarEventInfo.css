@@ -15,7 +15,6 @@
     background: #ffffff;
     border-radius: 8px;
     border: 1px solid rgb(211, 211, 211, .4);
-    overflow-y: auto;
     box-shadow: 0px 0px 3px 2px rgb(211, 211, 211, .4);
 }
 
@@ -230,7 +229,7 @@
     padding-right: 16px;
     column-gap: 10px;
     margin-top: 20px;
-    transition: top 200ms ease-in;
+    transition: all 200ms ease-in;
 }
 
 .btn-yes {
@@ -318,14 +317,21 @@
     border-top: #dadce0 1px solid;
     display: flex;
     flex: none;
-    width: 120%;
-    min-height: 48px;
+    width: 428px;
+    height: 0px;
+    overflow: hidden;
     margin-top: 10px;
     justify-content: flex-end;
     column-gap: 10px;
     padding-left: 16px;
     padding-right: 10px;
     margin-right: -16px;
+    transition-property: height;
+    transition-delay: 200ms;
+}
+
+.notes.notes-hidden {
+    transition-delay: 0s;
 }
 
 .btn-propose {

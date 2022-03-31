@@ -9,7 +9,7 @@ const WEEK_DAYS: string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursd
 //Add dialogs for event notes next to yes button
 //Check mark next to avatar
 //On hover over guests show small dialog with info 
-//If guests does not have an icon and his name is known show a capital letter avatar, if his name is unknow use default user avatar and write his email
+//If guests does not have an icon and his name is known show a capital letter avatar, if his name is unknown use default user avatar and write his email
 @Component({
     selector: 'calendar-event-info',
     templateUrl: 'calendar_event_info.template.html',
