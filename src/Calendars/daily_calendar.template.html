@@ -33,7 +33,7 @@
             [style.margin-left.px]="event.marginLeft"
             (mousedown)="onMouseDown($event, event)">
             <div class="event-name">
-                {{ event.name }} <span *ngIf="event.interval <= 30">{{ ', ' + event.duration }}</span>
+                {{ event.name }} <span *ngIf="event.interval <= 30">, {{ event.duration }}</span>
             </div>
             <div class="event-duration" *ngIf="event.interval > 30">
                 {{ event.duration }}
