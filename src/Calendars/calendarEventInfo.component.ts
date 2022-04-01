@@ -4,7 +4,7 @@ import { UsersService } from "src/Services/usersService.class";
 
 const WEEK_DAYS: string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 //TODO
-// prevent scrolling of daily view while info dialog is open
+//Prevent scrolling of daily view while info dialog is open
 //Add dialogs for event notes next to yes button
 //On hover over guests show small dialog with info 
 @Component({
@@ -18,6 +18,7 @@ export class CallendarEventInfo implements OnInit, OnDestroy {
 
     guests!: any[];
     showNotes: boolean = false;
+    hoveredGuestId: any;
 
     faSquare = faSquare;
     faClone = faClone;
@@ -29,6 +30,7 @@ export class CallendarEventInfo implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.setGuests();
+        //mouse listener for hover event
     }
 
     ngOnDestroy(): void {
@@ -85,7 +87,7 @@ export class CallendarEventInfo implements OnInit, OnDestroy {
         this.guests = this.usersService.getUsers(guestIds);
         for (let guest of this.guests) {
             if (!guest.image && !guest.name) {
-                guest.image = 'https://lh3.googleusercontent.com/a/default-user=s24-c';
+                guest.image = 'assets/images/default_user_avatar.jpg';
                 guest.name = guest.email;
             }
 
@@ -94,8 +96,13 @@ export class CallendarEventInfo implements OnInit, OnDestroy {
             }
             guest.going = this.event.guests.find((eventG: any) => eventG.userId == guest.userId).going;
         }
-        // this.event.guests.map((guest: any) => {
-        //     Object.assign(guest, { info: this.usersService.getUser(guest.userId) })
-        // });
+    }
+
+    onHover(event: any, guestId: any) {
+        this.hoveredGuestId = guestId;
+    }
+
+    onMouseOut() {
+        this.hoveredGuestId = undefined;
     }
 }
