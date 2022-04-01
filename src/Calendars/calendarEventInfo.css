@@ -57,7 +57,7 @@
     display: grid;
     width: 100%;
     grid-template-columns: 50px 1fr;
-    gap: 20px 10px;
+    gap: 20px 5px;
     overflow: auto;
 }
 
@@ -144,6 +144,15 @@
     color: #3c4043;
 }
 
+.organizer {
+    font-family: Roboto,Arial,sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: .2px;
+    line-height: 20px;
+    color: #3c4043;
+}
+
 .guests {
     font-family: Roboto, Arial, sans-serif;
     display: flex;
@@ -197,6 +206,89 @@
     line-height: 20px;
     color: #3c4043;
     margin-top: 10px;
+}
+
+.guest-info {
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 2px 6px 2px rgb(60 64 67 / 15%);
+    opacity: 1;
+    position: absolute;
+    min-width: 340px;
+    max-width: 488px;
+    height: 145px;
+    z-index: 2201;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.guest-info-header {
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+    height: auto;
+    margin: 18px 22px 14px 22px;
+    column-gap: 14px;
+}
+
+.guest-info-image {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+}
+
+.guest-info-detils {
+    width: 176px;
+    height: 64px;
+}
+
+.guest-info-title {
+    color: #202124;
+    font-family: 'Google Sans', 'Roboto', sans-serif;
+    font-size: 22px;
+    line-height: 28px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.guest-info-email {
+    color: #3c4043;
+    font: 400 13px/20px 'Roboto', 'RobotoDraft', Helvetica, Arial, sans-serif;
+}
+
+.guest-info-btn-add {
+    margin-left: auto;
+    margin-right: 35px;
+}
+
+.guest-info-footer {
+    width: 340px;
+    height: 49px;
+    display: flex;
+    flex-flow: row nowrap;
+    padding: 0px 22px 1px;
+}   
+
+.guest-info-btn-detailed {
+    width: 144px;
+    height: 28px;
+    min-height: 36px;
+    min-width: 40px;
+    background-color: #e8f0fe;
+    color: #1967d2;
+    font-family: 'Google Sans',Roboto,sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 34px;
+    margin: 4px 0;
+    text-align: center;
+    text-transform: none;
+    border-radius: 4px;
+}
+
+.guest-info-controls {
+    margin: 8px -6px 8px 0px;
 }
 
 .check {

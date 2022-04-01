@@ -10,6 +10,7 @@ const VIEW_HEIGHT = 560;
 //TODO
 // Add current hour (for current day only) red line in template
 // Extend end time of event by dragging from the bottom border
+// Left nav checkboxes and coloring for them and for every user event
 @Component({
   selector: 'daily-calendar',
   templateUrl: 'daily_calendar.template.html',
