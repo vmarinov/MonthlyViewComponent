@@ -7,7 +7,9 @@ const EVENT_MAX_WIDTH = 1200;
 const EVENT_MIN_HEIGHT = 12;
 const EVENT_MAX_HEIGHT = 48;
 const VIEW_HEIGHT = 560;
-
+//TODO
+// Add current hour (for current day only) red line in template
+// Extend end time of event by dragging from the bottom border
 @Component({
   selector: 'daily-calendar',
   templateUrl: 'daily_calendar.template.html',
