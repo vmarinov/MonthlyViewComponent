@@ -5,7 +5,7 @@
 #layout {
     position: absolute;
     z-index: 999;
-    margin: -60px 45% auto 15%;
+    margin: -10px 45% auto 15%;
     display: flex;
     width: 428px;
     max-width: 448px;

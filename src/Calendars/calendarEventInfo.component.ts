@@ -7,6 +7,7 @@ const WEEK_DAYS: string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursd
 //Prevent scrolling of daily view while info dialog is open
 //Add dialogs for event notes next to yes button
 //On hover over guests show small dialog with info 
+// Move info dialog to seperate logic
 @Component({
     selector: 'calendar-event-info',
     templateUrl: 'calendar_event_info.template.html',

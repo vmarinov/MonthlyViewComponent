@@ -6,9 +6,10 @@
     max-height: 547px;
     background: #ffffff;
     z-index: 999;
-    margin: -60px 45% auto 15%;
+    margin: 15px 45% auto 15%;
     border-radius: 8px;
     border: 1px solid rgb(211, 211, 211, .4);
+    box-shadow: 0px 0px 3px 2px rgb(211, 211, 211, .4);
     overflow-y: auto;
 }
 
