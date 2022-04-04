@@ -1,5 +1,5 @@
 import { Component, Inject, Input, Output, EventEmitter, OnInit, OnDestroy } from "@angular/core";
-import { faSquare, faClone, faCalendarDay, faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import { faSquare, faClone, faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { UsersService } from "src/Services/usersService.class";
 
 const WEEK_DAYS: string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -19,11 +19,13 @@ export class CallendarEventInfo implements OnInit, OnDestroy {
 
     guests!: any[];
     showNotes: boolean = false;
-    hoveredGuestId: any;
+    hoveredGuest: any;
+    hoveringGuestInfo: boolean = false;
+    pageY: any;
+    pageX: any;
 
     faSquare = faSquare;
     faClone = faClone;
-    faCalendarDay = faCalendarDay;
     faAngleDown = faAngleDown;
     faAngleUp = faAngleUp;
 
@@ -31,7 +33,6 @@ export class CallendarEventInfo implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.setGuests();
-        //mouse listener for hover event
     }
 
     ngOnDestroy(): void {
@@ -99,11 +100,20 @@ export class CallendarEventInfo implements OnInit, OnDestroy {
         }
     }
 
-    onHover(event: any, guestId: any) {
-        this.hoveredGuestId = guestId;
-    }
-
-    onMouseOut() {
-        this.hoveredGuestId = undefined;
+    onGuestHover(event: any, guest: any) {
+        if (!this.hoveredGuest) {
+            this.pageY = event.pageY;
+            this.pageX = event.pageX;
+            this.hoveredGuest = guest;
+        } else {
+            let timeout = setTimeout(() => {
+                if (!this.hoveringGuestInfo) {
+                    this.hoveredGuest = undefined;
+                    this.pageX = undefined;
+                    this.pageY = undefined;
+                }
+                clearTimeout(timeout);
+            }, 100);
+        }
     }
 }

@@ -16,6 +16,7 @@ import { CommonModule } from "@angular/common";
 import { CalendarEventSettings } from "./Calendars/calendarEventSettings.component";
 import { CallendarEventInfo } from "./Calendars/calendarEventInfo.component";
 import { UsersService } from "./Services/usersService.class";
+import { GuestInfoComponent } from "./Calendars/guestInfo.component";
 
 const routes: Routes = [
   { path: "", component: MonthlyCalendarComponent },
@@ -81,7 +82,8 @@ class AppComponent {
     WeeklyCalendarComponent,
     DailyCalendarComponent,
     CalendarEventSettings,
-    CallendarEventInfo
+    CallendarEventInfo,
+    GuestInfoComponent
   ],
   bootstrap: [AppComponent],
   providers: [

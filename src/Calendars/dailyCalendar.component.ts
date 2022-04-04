@@ -213,7 +213,7 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     let groupedEvents = [];
     let currGroup = { start: sortedEvents[0].startHour, end: sortedEvents[0].endHour, events: [sortedEvents[0]] };
     groupedEvents.push(currGroup);
-    
+
     for (let i = 1; i < sortedEvents.length - 1; i++) {
       let event = sortedEvents[i];
       if (event.startHour < currGroup.end) {
@@ -307,6 +307,9 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
   }
 
   onMouseUp() {
+    if (!this.draggedEventEl) {
+      return;
+    }
     let elTop = this.draggedEventEl.style.top.substring(0, this.draggedEventEl.style.top.length - 2);
     let newStartHr = Math.round(Math.ceil(elTop) / EVENT_MAX_HEIGHT);
     this.targetEvent.startHour = newStartHr;
@@ -315,8 +318,10 @@ export class DailyCalendarComponent implements OnInit, OnDestroy {
     this.setDraggedElProperties();
     this.draggedEventEl = undefined;
     this.durationEl = undefined;
-    this.mouseMoveEvent();
-    this.mouseMoveEvent = undefined;
+    if (this.mouseMoveEvent) {
+      this.mouseMoveEvent();
+      this.mouseMoveEvent = undefined;
+    }
     this.dragStart = false;
     this.selectedHour = undefined;
   }
